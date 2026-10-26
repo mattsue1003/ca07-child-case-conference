@@ -269,19 +269,38 @@ walkbelt:{L:7,draw(t){
   s+=t<3.1?cap(['用腰帶帶著走','或抓好腋下和褲頭']):cap(['偶爾軟腳','腰帶能穩穩接住']);
   return s;}},
 
-practice:{L:12,draw(t){
+practice:{L:15,draw(t){
   let s=bgx(1);
-  if(t<6){
-    s+=head('手撐地板',t)+rect(36,372,200,7,4,C.sage,'opacity=".5"')+ground(379,t);
-    const sh=Math.sin(t*14)*.5,hip={x:108,y:353+Math.sin(t*2)*.6};
-    const k=fig({hip,ta:66,fN:{x:86,y:371},fF:{x:84,y:371},hN:{x:138+sh,y:370},hF:{x:133+sh,y:370},ha:-30});
-    s+=k.all;
-    const sec=Math.floor(60*sg(t,.4,5.4));
-    s+=circ(204,150,34,'none',`stroke="${C.cream}" stroke-width="8"`)+`<circle cx="204" cy="150" r="34" fill="none" stroke="${C.terra}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${R(213.6*sec/60)} 213.6" transform="rotate(-90 204 150)"/>`;
-    s+=T(204,156,sec,{size:22})+T(204,203,'秒',{size:13,w:400,c:C.muted});
-    s+=cap(['一次 1 分鐘，做 2–4 次','撐得越久，手越有力']);
+  if(t<9){
+    const ph=t<3?0:t<6?1:2,tl=t-ph*3;
+    s+=head(['手撐地板','雙腳稍微抬高','手撐往前走'][ph],tl)+rect(20,372,230,7,4,C.sage,'opacity=".5"')+ground(379,t);
+    if(ph===0){
+      const sh=Math.sin(t*14)*.5,hip={x:108,y:353+Math.sin(t*2)*.6};
+      s+=fig({hip,ta:66,fN:{x:86,y:371},fF:{x:84,y:371},hN:{x:138+sh,y:370},hF:{x:133+sh,y:370},ha:-30}).all;
+      const sec=Math.floor(60*sg(t,.3,2.8));
+      s+=circ(204,150,34,'none',`stroke="${C.cream}" stroke-width="8"`)+`<circle cx="204" cy="150" r="34" fill="none" stroke="${C.terra}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${R(213.6*sec/60)} 213.6" transform="rotate(-90 204 150)"/>`;
+      s+=T(204,156,sec,{size:22})+T(204,203,'秒',{size:13,w:400,c:C.muted});
+      s+=cap(['跪姿手撐地板','一次 1 分鐘，做 2–4 次']);
+    }else{
+      const lift=ez(sg(tl,0,.8));
+      const mv=ph===2?Math.min(tl,2.8)*14:0,step=ph===2?Math.sin(tl*7):0;
+      const hip={x:118+mv,y:lerp(353,344,lift)};
+      const ta=lerp(66,80,lift);
+      const ftY=lerp(371,338,lift);
+      const fN={x:hip.x-34,y:ftY},fF={x:hip.x-36,y:ftY+2};
+      const hN={x:hip.x+36+Math.max(0,step)*6,y:370-Math.max(0,step)*4},hF={x:hip.x+31+Math.max(0,-step)*6,y:370-Math.max(0,-step)*4};
+      const kid=fig({hip,ta,fN,fF,hN,hF,ha:-38});
+      const grip={x:fN.x+4,y:fN.y-2};
+      const sho={x:grip.x-30,y:grip.y-48};
+      let sc=poly([{x:sho.x-22,y:sho.y-8},sho],20,C.dadShirt,.9);
+      sc+=kid.all+poly([sho,{x:grip.x-14,y:grip.y-18},grip],9,C.dadShirt)+circ(grip.x,grip.y,6,C.skin);
+      if(ph===2)sc+=`<path d="M${R(hip.x+52)} 318 l 16 0 m -6 -6 l 6 6 l -6 6" stroke="${C.terra}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      s+=grp(sc,{s:1.35,ox:135,oy:379});
+      s+=pill(135,112,'照顧者扶起雙腳',C.teal,lift,14);
+      s+=ph===1?cap(['雙腳稍微抬高','提升手撐的強度']):cap(['讓他用手往前移動','訓練手部動態支撐力量']);
+    }
   }else{
-    const tb=t-6;s+=head('站姿撿東西',tb)+ground(372,t);
+    const tb=t-9;s+=head('站姿撿東西',tb)+ground(372,t);
     const c=(tb%2.4)/2.4,a=c<.4?ez(c/.4):c<.8?1-ez((c-.4)/.4):0;
     const hip=lp({x:124,y:335},{x:108,y:354},a);
     const obj={x:152,y:366};
