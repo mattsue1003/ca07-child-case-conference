@@ -280,7 +280,7 @@ practice:{L:15,draw(t){
       const sec=Math.floor(60*sg(t,.3,2.8));
       s+=circ(204,150,34,'none',`stroke="${C.cream}" stroke-width="8"`)+`<circle cx="204" cy="150" r="34" fill="none" stroke="${C.terra}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${R(213.6*sec/60)} 213.6" transform="rotate(-90 204 150)"/>`;
       s+=T(204,156,sec,{size:22})+T(204,203,'秒',{size:13,w:400,c:C.muted});
-      s+=cap(['跪姿手撐地板','一次 1 分鐘，做 2–4 次']);
+      s+=cap(['手撐地板','一次 1 分鐘，做 2–4 次']);
     }else{
       const lift=ez(sg(tl,0,.8));
       const mv=ph===2?Math.min(tl,2.8)*14:0,step=ph===2?Math.sin(tl*7):0;
@@ -375,9 +375,9 @@ freq:{L:8,draw(t){
   return s;}},
 
 embed:{L:12,draw(t){
-  let s=bgx(1)+head('把練習放進照顧裡',t);
+  let s=bgx(1)+head('練習融入生活',t);
   const sc=Math.min(2,Math.floor(t/4)),tl=t-sc*4,fo=sg(tl,0,.35)*(1-sg(tl,3.65,4));
-  const lab=['換尿布前','移位時','餵食時'][sc],sub=['扶著站 10 秒','重心前後左右','先讓他握住湯匙'][sc];
+  const lab=['換尿布時','扶著站','穿脫衣物時'][sc],sub=['扶著站 10 秒','重心前後左右轉移','站著練習'][sc];
   let g=pill(135,100,lab,[C.terra,C.teal,C.sage][sc],1,15)+ground(372,t);
   if(sc===0){
     g+=rect(150,296,96,6,3,'#C9A27A')+rect(236,296,6,76,3,'#C9A27A')+rect(152,296,6,76,3,'#C9A27A');
@@ -385,22 +385,24 @@ embed:{L:12,draw(t){
     g+=k.all;const n=Math.min(10,Math.floor(sg(tl,.4,3.4)*10)+1);
     g+=circ(205,170,26,C.honey)+T(205,178,n,{size:22,c:'#fff'});
   }else if(sc===1){
-    g+=rect(30,330,100,14,7,'#C9A27A')+rect(30,312,100,20,8,C.rose,'opacity=".6"')+rect(34,344,6,28,3,'#C9A27A')+rect(120,344,6,28,3,'#C9A27A');
+    g+=rect(150,296,96,6,3,'#C9A27A')+rect(236,296,6,76,3,'#C9A27A')+rect(152,296,6,76,3,'#C9A27A');
     const sw=Math.sin(tl*Math.PI);
-    const k=fig({hip:{x:110,y:326},ta:16*sw,fN:{x:142,y:370},fF:{x:136,y:370},hN:{x:124,y:332},hF:{x:118,y:332}});
+    const k=fig({hip:{x:128+sw*4,y:333},ta:sw*8,fN:{x:132,y:370},fF:{x:124,y:370},hN:{x:158,y:300},hF:{x:152,y:302}});
     g+=k.all;
-    const ix=205,iy=180,ph=Math.floor(tl*2)%4,dirs=[[0,-1],[0,1],[-1,0],[1,0]],amt=Math.sin((tl*2%1)*Math.PI);
-    g+=circ(ix,iy,40,C.white,`stroke="${C.cream}" stroke-width="2"`)+`<ellipse cx="${ix-11}" cy="${iy}" rx="8" ry="15" fill="${C.cream}"/><ellipse cx="${ix+11}" cy="${iy}" rx="8" ry="15" fill="${C.cream}"/>`;
-    g+=circ(ix+dirs[ph][0]*18*amt,iy+dirs[ph][1]*18*amt,7,C.terra)+T(ix,iy+58,'重心',{size:12,w:400,c:C.muted});
+    const ix=205,iy=172,ph=Math.floor(tl*2)%4,dirs=[[0,-1],[0,1],[-1,0],[1,0]],amt=Math.sin((tl*2%1)*Math.PI);
+    g+=circ(ix,iy,36,C.white,`stroke="${C.cream}" stroke-width="2"`)+`<ellipse cx="${ix-10}" cy="${iy}" rx="7" ry="14" fill="${C.cream}"/><ellipse cx="${ix+10}" cy="${iy}" rx="7" ry="14" fill="${C.cream}"/>`;
+    g+=circ(ix+dirs[ph][0]*16*amt,iy+dirs[ph][1]*16*amt,6.5,C.terra)+T(ix,iy+52,'重心',{size:12,w:400,c:C.muted});
   }else{
-    g+=rect(66,326,44,8,4,'#C9A27A')+rect(68,334,6,40,3,'#C9A27A')+rect(102,334,6,40,3,'#C9A27A')+rect(140,298,116,8,4,'#C9A27A')+rect(236,306,7,68,3,'#C9A27A');
-    g+=`<path d="M166 288 q 20 18 40 0 z" fill="${C.terra}"/>`;
-    const lift=6*Math.sin(tl*2);
-    const hand={x:168,y:290-Math.max(0,lift)};
-    const k=fig({hip:{x:92,y:322},ta:4,fN:{x:128,y:372},fF:{x:122,y:372},hN:hand});
-    g+=k.g+ln(hand,{x:hand.x+14,y:hand.y-2},3,C.muted)+k.arm+circ(hand.x-1,hand.y+2,10,C.teal,'opacity=".35"');
+    g+=rect(150,296,96,6,3,'#C9A27A')+rect(236,296,6,76,3,'#C9A27A')+rect(152,296,6,76,3,'#C9A27A');
+    const k=fig({hip:{x:128,y:333},fN:{x:132,y:370},fF:{x:124,y:370},hN:{x:158,y:300},hF:{x:152,y:302}});
+    g+=k.all;
+    const up=ez(sg(tl,.4,2.6)),py=lerp(372,334,up);
+    g+=`<path d="M${117} ${R(py)} h 22 l 2 ${R(lerp(4,30,up))} h -8 l -4 -12 l -4 12 h -8 z" fill="${C.teal}" opacity=".9"/>`;
+    g+=circ(108,py+2,4,C.skin)+circ(146,py+2,4,C.skin);
+    const n=Math.min(20,Math.floor(sg(tl,.3,3.4)*20)+1);
+    g+=circ(205,170,26,C.honey)+T(205,177,n,{size:20,c:'#fff'})+T(205,214,'秒',{size:12,w:400,c:C.muted});
   }
-  s+=grp(g,{op:fo})+cap(['照顧時順便練：'+sub,'交給家屬與居服員'],fo);
+  s+=grp(g,{op:fo})+cap([lab+'：'+sub,'比另外排時間更重要'],fo);
   return s;}},
 
 q:{L:8,draw(t){
@@ -504,10 +506,10 @@ handfeed:{L:10,draw(t){
     s+=kid.g;
     const tip={x:hand.x+lerp(13,-2,up),y:hand.y+lerp(-1,-4,up)};
     s+=ln(hand,tip,3,C.muted)+`<ellipse cx="${R(tip.x)}" cy="${R(tip.y)}" rx="4.5" ry="2.6" fill="${C.muted}"/>`;
-    s+=kid.arm+circ(hand.x+1,hand.y+3,11,C.teal,'opacity=".32"')+T(hand.x+4,hand.y+30,'爸爸的手',{size:11,c:C.teal,op:1-up});
+    const wr=lp(kid.elN,hand,.72);s+=kid.arm+`<rect x="${R(hand.x-5)}" y="${R(hand.y-2.5)}" width="10" height="5" rx="1.5" fill="#fff" opacity=".9"/>`+circ(wr.x,wr.y,8,C.teal,'opacity=".38"')+T(wr.x-2,wr.y+26,'扶手腕',{size:11,c:C.teal,op:1-up});
     const hk=pop(tl,2.3)*(1-sg(tl,4.6,5.2));
     s+=grp(`<path d="M0 6 C -14 -6 -8 -18 0 -9 C 8 -18 14 -6 0 6 Z" fill="${C.terra}"/>`,{x:150,y:188,s:hk*1.4});
-    s+=tl<4.6?cap(['在協助下自己舀、自己送','刺激他慢慢喜歡上食物']):cap(['期待：主動去拿食物','（目前還沒有出現）']);
+    s+=tl<4.6?cap(['湯匙用膠帶稍微固定','扶著手腕引導他吃']):cap(['多帶著吃、少直接餵','進步後，讓他自己握湯匙']);
   }
   return s;}},
 lapsit:{L:10,draw(t){
