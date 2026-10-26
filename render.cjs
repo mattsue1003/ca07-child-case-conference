@@ -6,7 +6,9 @@ const mode=process.argv[2]||'sheet',only=process.argv[3];
   const b=await puppeteer.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:'new'});
   const p=await b.newPage();await p.setViewport({width:540,height:960});
   await p.goto('file://'+path.resolve('clips.html')+'?render=1',{waitUntil:'networkidle0'});
-  await p.evaluate(()=>document.fonts.ready);
+  await p.evaluate(async()=>{const txt=[...document.scripts].map(x=>x.textContent).join('')+'0123456789%／–—';
+    for(const w of [400,700]){const d=document.createElement('div');d.style.cssText=`position:absolute;left:-9999px;font-family:'LXGW WenKai TC';font-weight:${w}`;d.textContent=txt;document.body.appendChild(d);}
+    await document.fonts.ready;await new Promise(r=>setTimeout(r,800));await document.fonts.ready;});
   const clips=await p.evaluate(()=>window.CLIPS);
   const el=await p.$('#v');
   fs.mkdirSync('video',{recursive:true});fs.mkdirSync('sheet',{recursive:true});

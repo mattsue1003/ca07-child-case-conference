@@ -350,9 +350,9 @@ freq:{L:8,draw(t){
     for(let d=0;d<28;d++){const x=38+(d%7)*27,yy=y+Math.floor(d/7)*27,on=fill(d)&&t>.4+d*.16;if(on)n++;
       g+=rect(x,yy,22,22,6,on?col:C.cream,on?'':'opacity=".7"');if(on)g+=`<path d="M${x+6} ${yy+11} l4 4 l7 -8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;}
     return g+T(232,y-10,n+' 次',{a:'end',size:15,c:col});};
-  s+=grid(110,'醫院復健（每週 1 次）',C.teal,d=>d%7===2);
+  s+=grid(110,'醫院（每次 30 分）',C.teal,d=>[1,3,5].includes(d%7)&&!(d%7===5&&Math.floor(d/7)%2));
   s+=grid(262,'居家：家屬＋居服員',C.terra,d=>true);
-  s+=cap(['動作不難，重點是天天做','醫院教方法，家裡天天練']);
+  s+=t<4.5?cap(['醫院的 30 分鐘','拿來向治療師學方法']):cap(['家屬學會、再教居服員','多天數、高頻率才是關鍵']);
   return s;}},
 
 embed:{L:12,draw(t){
@@ -409,7 +409,7 @@ actioncard:{L:12,draw(t){
   const i=Math.min(3,Math.floor(t/3)),tl=t-i*3,fo=sg(tl,0,.3)*(1-sg(tl,2.75,3));
   s+=rect(22,84,226,300,22,C.white,`stroke="${C.cream}" stroke-width="2"`);
   for(let j=0;j<4;j++)s+=circ(108+j*18,372,j===i?6:4,j===i?C.terra:C.cream);
-  const labs=[['腰帶帶著走','抓腰帶或腋下、褲頭'],['手撐地板','1 分鐘 × 2–4 次'],['撿地上的東西','一天 10–20 次'],['重心前後左右','回到正中']];
+  const labs=[['腰帶帶著走','抓腰帶或腋下、褲頭'],['手撐地板','1 分鐘 × 2–4 次'],['撿地上的東西','一天 10–20 次'],['坐大腿重心轉移','往後、往側邊，誘發抓握']];
   const cols=[C.terra,C.honey,C.sage,C.teal];
   let g=circ(52,116,16,cols[i])+T(52,122,i+1,{size:17,c:'#fff'})+T(78,113,labs[i][0],{a:'start',size:17})+T(78,133,labs[i][1],{a:'start',size:12.5,w:400,c:C.muted});
   const gy=330;g+=ln({x:40,y:gy},{x:230,y:gy},3,C.cream);
@@ -433,6 +433,90 @@ actioncard:{L:12,draw(t){
     g+=circ(ix+d[ph][0]*30*amt,iy+d[ph][1]*30*amt,10,C.terra)+T(ix,iy+86,'坐姿或站姿皆可',{size:12,w:400,c:C.muted});}
   s+=grp(g,{op:fo});
   s+=cap(['圖示＋次數＋安全提醒','讓練習每天都做得到']);
+  return s;}},
+attention:{L:10,draw(t){
+  let s=bgx(1);
+  const B=t>=5,tl=B?t-5:t;
+  s+=head(B?'腳穩了，注意力轉向環境':'腳沒力時，注意力都在站穩',tl);
+  const gy=372;
+  const reach=B?ez(sg(tl,2.2,3.2))*(1-ez(sg(tl,4.3,4.9))):0;
+  const ph=(B?Math.min(tl,2.2)+Math.max(0,tl-4.9):tl)*4.6;
+  s+=ground(gy,t,reach>0.01?0:30);
+  s+=rect(196,318,56,8,4,'#C9A27A')+rect(222,326,6,46,3,'#C9A27A');
+  const ball={x:214,y:308};
+  s+=circ(ball.x,ball.y,9,B?C.honey:'#E3D6C2')+`<path d="M${R(ball.x-6)} ${R(ball.y-4)} q 6 6 12 0" stroke="#fff" stroke-width="2" fill="none" opacity="${B?1:.4}"/>`;
+  s+=`<path d="M236 318 q -4 -22 4 -34 q 8 12 2 34 z" fill="${B?C.sage:'#DCD3C4'}"/>`;
+  const wob=B?0:Math.sin(tl*3.1),dip=B?0:Math.max(0,Math.sin(tl*2.3))*4;
+  const w=walk(132,gy,ph,1,B?8:5);w.hip.y+=dip;w.hip.x+=wob*3;
+  const hand=lp({x:w.hip.x+5-5*Math.sin(ph),y:w.hip.y+1},{x:ball.x-8,y:ball.y-2},reach);
+  const kid=fig({hip:w.hip,fN:w.fN,fF:w.fF,ta:B?lerp(0,14,reach):wob*7,ha:B?8:24,hN:hand,hF:{x:w.hip.x-3+5*Math.sin(ph),y:w.hip.y+1}});
+  s+=kid.all;
+  if(!B)for(let i=0;i<2;i++){const q=(tl*1.1+i/2)%1;s+=`<path d="${arc(w.hip.x,gy,10+q*20,4.5,7.5)}" fill="none" stroke="${C.terra}" stroke-width="2" opacity="${R((1-q)*.6)}"/>`;}
+  if(B&&reach>.85)for(let i=0;i<5;i++){const a=i/5*2*Math.PI+tl;s+=circ(ball.x+16*Math.cos(a),ball.y+16*Math.sin(a),2.2,C.honey);}
+  const leg=B?lerp(.8,.25,ez(sg(tl,0,1.5))):lerp(.3,.85,ez(sg(tl,0,1.5)));
+  s+=T(36,104,'注意力',{a:'start',size:13,c:C.muted,w:400});
+  s+=rect(36,112,198,22,11,C.cream)+rect(36,112,198*leg,22,11,C.terra)+rect(36+198*leg,112,198*(1-leg),22,11,C.sage,leg>.97?'opacity="0"':'');
+  s+=T(36+198*leg/2,128,leg>.35?'站穩':'',{size:12,c:'#fff'})+T(36+198*leg+198*(1-leg)/2,128,1-leg>.35?'環境':'',{size:12,c:'#fff'});
+  s+=B?cap(['腳穩了，注意力轉向周圍','雙手開始探索、觸摸物品']):cap(['腳沒力，認知負荷都在站穩','手沒有餘力去探索']);
+  return s;}},
+handfeed:{L:10,draw(t){
+  let s=bgx(0);
+  const B=t>=4,tl=B?t-4:t;
+  s+=head(B?'帶著他握湯匙':'直接餵',tl);
+  s+=pill(135,100,B?'手有在用':'手沒有參與',B?C.terra:C.muted,pop(tl,.2),14);
+  s+=rect(66,326,44,8,4,'#C9A27A')+rect(68,334,6,40,3,'#C9A27A')+rect(102,334,6,40,3,'#C9A27A')+rect(66,282,7,52,3,'#C9A27A');
+  s+=rect(140,298,116,8,4,'#C9A27A')+rect(236,306,7,68,3,'#C9A27A')+ground(374,t);
+  s+=`<path d="M166 288 q 20 18 40 0 z" fill="${C.terra}"/><ellipse cx="186" cy="288" rx="20" ry="4" fill="#B85E3E"/>`;
+  const hip={x:92,y:322},base={hip,ta:4,fN:{x:128,y:372},fF:{x:122,y:372}};
+  const k0=fig(base),mouth={x:k0.hc.x+k0.L.hr*.95,y:k0.hc.y+k0.L.hr*.45};
+  if(!B){
+    const kid=fig({...base,hN:{x:hip.x+16,y:hip.y-4},hF:{x:hip.x+12,y:hip.y-3},mouth:tl>1.4&&tl<2.6?2.6:0});
+    s+=kid.all;
+    const up=ez(sg(tl,.4,1.6))*(1-ez(sg(tl,2.6,3.5)));
+    const tip=lp({x:186,y:284},{x:mouth.x+3,y:mouth.y},up);
+    s+=ln({x:tip.x+18,y:tip.y+3},{x:270,y:tip.y-22},11,C.skin)+circ(tip.x+17,tip.y+3,6.5,C.skin);
+    s+=ln(tip,{x:tip.x+16,y:tip.y+2},3,C.muted)+`<ellipse cx="${R(tip.x)}" cy="${R(tip.y)}" rx="4.5" ry="2.6" fill="${C.muted}"/>`;
+    s+=grp(rect(160,226,80,28,14,C.white,`stroke="${C.rose}" stroke-width="1.5"`)+T(200,245,'用進廢退',{size:13,c:C.terra}),{op:sg(tl,1.5,2)});
+    s+=cap(['直接餵，手沒有參與','久了容易用進廢退']);
+  }else{
+    const up=ez(sg(tl,.8,2.2))*(1-ez(sg(tl,3.2,4.4)));
+    const hand=lp({x:186+3*Math.sin(tl*8)*(tl<.8?1:0),y:288},{x:mouth.x+6,y:mouth.y+4},up);
+    const kid=fig({...base,hN:hand,mouth:up>.9?2.6:0});
+    s+=kid.g;
+    const tip={x:hand.x+lerp(13,-2,up),y:hand.y+lerp(-1,-4,up)};
+    s+=ln(hand,tip,3,C.muted)+`<ellipse cx="${R(tip.x)}" cy="${R(tip.y)}" rx="4.5" ry="2.6" fill="${C.muted}"/>`;
+    s+=kid.arm+circ(hand.x+1,hand.y+3,11,C.teal,'opacity=".32"')+T(hand.x+4,hand.y+30,'爸爸的手',{size:11,c:C.teal,op:1-up});
+    const hk=pop(tl,2.3)*(1-sg(tl,4.6,5.2));
+    s+=grp(`<path d="M0 6 C -14 -6 -8 -18 0 -9 C 8 -18 14 -6 0 6 Z" fill="${C.terra}"/>`,{x:150,y:188,s:hk*1.4});
+    s+=tl<4.6?cap(['在協助下自己舀、自己送','刺激他慢慢喜歡上食物']):cap(['期待：主動去拿食物','（目前還沒有出現）']);
+  }
+  return s;}},
+lapsit:{L:10,draw(t){
+  let s=bgx(1)+head('坐在大腿上的重心轉移',t);
+  const gy=374;let sc='';
+  sc+=rect(46,348,52,8,4,'#C9A27A')+rect(50,356,6,18,3,'#C9A27A')+rect(88,356,6,18,3,'#C9A27A')+ground(gy,t);
+  const tilt=t<2?0:Math.max(0,Math.sin((t-2)*Math.PI/2.2));
+  const dhip={x:74,y:343},dad0=fig({hip:dhip,ta:-16,s:1.3,shirt:C.dadShirt,pants:C.dadPants,fN:{x:118,y:372},fF:{x:112,y:372}});
+  const khip=lp(dhip,dad0.kN,.9);khip.y-=8;
+  const kta=-24*tilt;
+  const kid0=fig({hip:khip,ta:kta,fN:{x:khip.x+20,y:khip.y+28},fF:{x:khip.x+17,y:khip.y+29}});
+  const hold={x:lerp(khip.x,kid0.sho.x,.35)-3,y:lerp(khip.y,kid0.sho.y,.35)+2};
+  const dad=fig({hip:dhip,ta:-16+4*tilt,s:1.3,shirt:C.dadShirt,pants:C.dadPants,fN:{x:118,y:372},fF:{x:112,y:372},hN:hold,hF:{x:hold.x-6,y:hold.y+4},ha:10});
+  const grab=ez(sg(tilt,.35,.8));
+  const kH=lp({x:kid0.sho.x+8,y:kid0.sho.y+24},{x:dad.wN.x+1,y:dad.wN.y-1},grab);
+  const kid=fig({hip:khip,ta:kta,fN:{x:khip.x+20,y:khip.y+28},fF:{x:khip.x+17,y:khip.y+29},hN:kH,hF:{x:kH.x-3,y:kH.y+2},mouth:tilt>.6?2:0});
+  sc+=dad.g+kid.g;
+  const core=lp(khip,kid.sho,.45);
+  sc+=`<ellipse cx="${R(core.x)}" cy="${R(core.y)}" rx="${R(9+5*tilt)}" ry="${R(13+6*tilt)}" fill="${C.terra}" opacity="${R(.45*tilt)}"/>`;
+  sc+=dad.arm+kid.arm;
+  if(grab>.8)for(let i=0;i<3;i++){const a=-1.2+i*.6;sc+=ln({x:kH.x+8*Math.cos(a),y:kH.y+8*Math.sin(a)},{x:kH.x+14*Math.cos(a),y:kH.y+14*Math.sin(a)},2,C.honey);}
+  if(tilt>.3)sc+=T(core.x+24,core.y+4,'核心',{size:10,c:C.terra,op:tilt});
+  s+=grp(sc,{s:1.5,ox:80,oy:374,x:2});
+  const ix=206,iy=176,side=t<2?0:Math.sin((t-2)*Math.PI/1.6)*16;
+  s+=circ(ix,iy,44,C.white,`stroke="${C.cream}" stroke-width="2"`)+ln({x:ix-28,y:iy+22},{x:ix+28,y:iy+22},7,C.dadPants);
+  s+=grp(`<ellipse cx="${ix}" cy="${iy+4}" rx="10" ry="16" fill="${C.kidShirt}"/>`+circ(ix,iy-18,9,C.skin)+circ(ix-2,iy-21,8,C.hair,'opacity=".9"'),{rot:side,ox:ix,oy:iy+20});
+  const sd=side>0?1:-1;s+=circ(ix-sd*22,iy+8,4,C.skin)+T(ix,iy+60,'往後、往側邊',{size:12,w:400,c:C.muted});
+  s+=t<3.4?cap(['坐在照顧者一側大腿上','另一腿夾住膝蓋與小腿']):t<6.7?cap(['重心往後、往側邊傾','誘發核心出力']):cap(['怕倒，手會去抓','保護性反應帶出抓握']);
   return s;}},
 end:{L:7,draw(t){
   let s=bgx(0)+circ(135,250,96,C.honey,'opacity=".25"')+ground(372,t,30);
