@@ -404,6 +404,36 @@ next:{L:7,draw(t){
   s+=cap(['請個管協助','一起連結資源']);
   return s;}},
 
+actioncard:{L:12,draw(t){
+  let s=bgx(0)+head('給居服員的動作卡',t);
+  const i=Math.min(3,Math.floor(t/3)),tl=t-i*3,fo=sg(tl,0,.3)*(1-sg(tl,2.75,3));
+  s+=rect(22,84,226,300,22,C.white,`stroke="${C.cream}" stroke-width="2"`);
+  for(let j=0;j<4;j++)s+=circ(108+j*18,372,j===i?6:4,j===i?C.terra:C.cream);
+  const labs=[['腰帶帶著走','抓腰帶或腋下、褲頭'],['手撐地板','1 分鐘 × 2–4 次'],['撿地上的東西','一天 10–20 次'],['重心前後左右','回到正中']];
+  const cols=[C.terra,C.honey,C.sage,C.teal];
+  let g=circ(52,116,16,cols[i])+T(52,122,i+1,{size:17,c:'#fff'})+T(78,113,labs[i][0],{a:'start',size:17})+T(78,133,labs[i][1],{a:'start',size:12.5,w:400,c:C.muted});
+  const gy=330;g+=ln({x:40,y:gy},{x:230,y:gy},3,C.cream);
+  if(i===0){const ph=tl*5.2,w=walk(152,gy,ph,.9,7);
+    const kid=fig({hip:w.hip,fN:w.fN,fF:w.fF,s:.9,hN:{x:w.hip.x+4,y:w.hip.y+2}});
+    const dw=walk(112,gy,ph+.6,1.15,8),grip={x:w.hip.x-13,y:w.hip.y-20};
+    const dad=fig({hip:dw.hip,fN:dw.fN,fF:dw.fF,ta:12,s:1.15,shirt:C.dadShirt,pants:C.dadPants,hN:grip});
+    g+=dad.g+kid.all+ln({x:w.hip.x-9,y:w.hip.y-4},{x:w.hip.x+9,y:w.hip.y-4},5,C.terra)+ln({x:w.hip.x-8,y:w.hip.y-4},grip,2.4,C.terra)+dad.arm;}
+  else if(i===1){const hip={x:112,y:gy-17};
+    g+=rect(60,gy-4,150,6,3,C.sage,'opacity=".5"');
+    g+=fig({hip,ta:66,s:.9,fN:{x:92,y:gy-2},fF:{x:90,y:gy-2},hN:{x:139,y:gy-2},hF:{x:135,y:gy-2},ha:-30}).all;
+    const sec=Math.floor(60*sg(tl,.3,2.6));g+=T(196,200,sec+' 秒',{size:20,c:C.honey});}
+  else if(i===2){const c=(tl%1.5)/1.5,a=Math.sin(Math.PI*c);
+    const hip=lp({x:124,y:gy-34},{x:110,y:gy-16},a),obj={x:150,y:gy-5};
+    const pre=fig({hip,ta:lerp(0,58,a),s:.9,fN:{x:128,y:gy-2},fF:{x:120,y:gy-2}});
+    const hand=lp({x:pre.sho.x+4,y:pre.sho.y+27},obj,a);
+    g+=fig({hip,ta:lerp(0,58,a),s:.9,fN:{x:128,y:gy-2},fF:{x:120,y:gy-2},hN:hand,ha:lerp(0,-25,a)}).all+circ(c<.5?obj.x:hand.x+2,c<.5?obj.y:hand.y+2,5.5,C.terra);}
+  else{const ix=135,iy=240,ph=Math.floor(tl*2.4)%4,d=[[0,-1],[0,1],[-1,0],[1,0]],amt=Math.sin((tl*2.4%1)*Math.PI);
+    g+=circ(ix,iy,62,C.bg)+`<ellipse cx="${ix-17}" cy="${iy}" rx="12" ry="24" fill="${C.cream}"/><ellipse cx="${ix+17}" cy="${iy}" rx="12" ry="24" fill="${C.cream}"/>`;
+    g+=ln({x:ix,y:iy-44},{x:ix,y:iy+44},1.5,C.cream,'stroke-dasharray="3 3"')+ln({x:ix-44,y:iy},{x:ix+44,y:iy},1.5,C.cream,'stroke-dasharray="3 3"');
+    g+=circ(ix+d[ph][0]*30*amt,iy+d[ph][1]*30*amt,10,C.terra)+T(ix,iy+86,'坐姿或站姿皆可',{size:12,w:400,c:C.muted});}
+  s+=grp(g,{op:fo});
+  s+=cap(['圖示＋次數＋安全提醒','讓練習每天都做得到']);
+  return s;}},
 end:{L:7,draw(t){
   let s=bgx(0)+circ(135,250,96,C.honey,'opacity=".25"')+ground(372,t,30);
   const ph=t*4.6;

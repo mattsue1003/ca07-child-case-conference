@@ -22,7 +22,7 @@ html,body{height:100%;background:#E9DCC8;color:var(--ink);
 .slide.on{display:block}
 .slide::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:var(--honey);opacity:.12;left:-140px;bottom:-180px}
 .slide::after{content:attr(data-n);position:absolute;left:56px;bottom:18px;font-size:13px;color:var(--muted)}
-.main{position:absolute;left:56px;top:42px;bottom:50px;right:400px;display:flex;flex-direction:column}
+.main{position:absolute;left:56px;top:40px;bottom:48px;right:400px;display:flex;flex-direction:column;justify-content:center}
 .clip{position:absolute;right:56px;top:50%;transform:translateY(-50%);width:306px;height:544px;border-radius:28px;overflow:hidden;background:#FFF8EE;border:6px solid #fff;box-shadow:0 16px 36px rgba(120,80,40,.2)}
 .clip video{width:100%;height:100%;object-fit:cover;display:block}
 .kicker{font-size:15px;font-weight:700;color:var(--terra);letter-spacing:.1em;margin-bottom:6px}
@@ -46,6 +46,7 @@ table{border-collapse:collapse;width:100%}
 td,th{font-size:16px;padding:7px 10px;border-bottom:1px dashed var(--line);text-align:left;vertical-align:top}
 th{color:var(--muted);font-weight:700;width:30%;white-space:nowrap}
 .note{display:none}
+.slide.roomy .card p,.slide.roomy .card li{font-size:18px}.slide.roomy h3{font-size:22px}.slide.roomy .card{padding:20px 24px}.slide.roomy .grid{gap:18px}.slide.roomy .quote{font-size:24px}
 .quote{font-family:var(--hand);font-size:22px;line-height:1.6;background:var(--paper);border-radius:20px;padding:18px 24px;border:2px dashed var(--honey)}
 .cover{background:radial-gradient(circle at 20% 15%,#FDE9D4 0,transparent 45%),radial-gradient(circle at 70% 90%,#E6EFE6 0,transparent 40%),var(--bg)}
 .cover .main{justify-content:center}
@@ -91,7 +92,7 @@ body:hover #hud{opacity:.9}
   <div class="main">
     <div class="kicker">線上個案研討｜居家復能 CA07</div>
     <h1>當復能的對象<br>是<em>一個孩子</em></h1>
-    <div class="sub">8 歲自閉症男童「小 A」墜落多處骨折後的居家職能治療</div>
+    <div class="sub">從職能治療的角度：復能介入與建議</div>
     <div class="meta">
       115 年 10 月 27 日（二）14:00　線上<br>
       服務治療師：鍾孟修 職能治療師<br>
@@ -100,222 +101,89 @@ body:hover #hud{opacity:.9}
     <div class="deid">本簡報已去識別化：個案與家屬姓名、身分證號、生日、電話、學校、醫院、服務單位與人員姓名、系統識別碼、詳細地址皆已移除。右側短影音為示意動畫。</div>
   </div>
   <div class="clip"></div>
-  <div class="note">大家好，我是愛迪樂居家職能治療所的同仁。鍾孟修治療師今天無法出席，由我代為報告。這個個案是鍾治療師在今年 3 月提供居家復能服務的孩子，以下稱他「小 A」。每一頁右側的短影音是示意動畫，幫助大家快速抓到重點。</div>
+  <div class="note">大家好，我是愛迪樂居家職能治療所的同仁。鍾孟修治療師今天無法出席，由我代為報告。今天的分享以職能治療的專業服務角度為主：個案背景只做簡短說明，重點放在復能的介入過程、遇到的困境，以及給團隊的建議。以下稱個案為「小 A」。每頁右側的短影音是示意動畫。</div>
 </section>
 
 <!-- 2 -->
-<section class="slide" data-title="個案概況" data-clip="fracture">
+<section class="slide" data-title="個案速寫" data-clip="fracture">
   <div class="main">
-    <div class="kicker">01　個案概況</div>
-    <h2>8 歲、自閉症、<em>墜落後多處骨折</em></h2>
-    <div class="card t" style="margin-bottom:14px">
-      <table>
-        <tr><th>性別／年齡</th><td>男，8 歲，國小特教班二年級</td></tr>
-        <tr><th>診斷</th><td>自閉症（F84），兒童身心科規則追蹤、用藥中</td></tr>
-        <tr><th>身心障礙</th><td>新制第一類，重度</td></tr>
-        <tr><th>長照</th><td>CMS 6 級（出院準備時為 8 級）；福利身分第二類</td></tr>
-      </table>
-    </div>
-    <div class="card o">
-      <h3>114 年 11 月：自家中 4 樓高處墜落</h3>
-      <ul>
-        <li><b>雙上肢</b>：右肱骨近端與遠端、右尺骨鷹嘴突、右橈骨遠端、左肱骨遠端（開放性）、左橈尺骨骨折</li>
-        <li><b>左股骨幹</b>、<b>第二頸椎</b>骨折；肺部輕微挫傷</li>
-        <li>多處開刀、石膏固定約 2 個月，<b>移除後尚未安排復健</b></li>
-      </ul>
+    <div class="kicker">01　個案速寫</div>
+    <h2>8 歲自閉症男孩，<em>墜落後雙手多處骨折</em></h2>
+    <div class="grid g3" style="margin-bottom:14px">
+      <div class="card t"><h3>基本</h3><p>國小特教班；自閉症、重度身障；CMS 6 級（出院時 8 級）</p></div>
+      <div class="card o"><h3>傷況</h3><p>114/11 自家中高處墜落：雙上肢多處、左股骨、第二頸椎骨折；石膏移除後<b>未銜接復健</b></p></div>
+      <div class="card b"><h3>溝通</h3><p>無口語，不舒服只能喊叫；理解能力難判斷；危險認知不足</p></div>
+      <div class="card a"><h3>功能</h3><p>巴氏 35 分：移位、走路滿分；<b>進食由爸爸餵</b>；尿布；上下樓由爸爸抱</p></div>
+      <div class="card t"><h3>家庭</h3><p>爸爸主要照顧、晚上全職外送；阿嬤住附近接放學；居服員一週 5 天</p></div>
+      <div class="card o"><h3>環境與風險</h3><p>3 樓無電梯、浴室高門檻無扶手；BMI 14.5；嗆咳紀錄待釐清</p></div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">小 A 原本就有自閉症、沒有口語。去年 11 月從家中高處墜落，雙手和左大腿多處骨折，也有頸椎骨折。石膏拆掉以後，家長表示還沒有安排復健。所以他現在吃飯、穿衣的困難，一部分來自自閉症，一部分來自骨折後雙手沒有力氣、關節活動受限。事故後陽台已經加裝隱形鐵窗。</div>
+  <div class="note">先用一頁簡單介紹小 A。他 8 歲，有自閉症、沒有口語。去年 11 月從家中高處墜落，雙手和左大腿多處骨折，石膏拆掉後沒有銜接醫院復健。現在走路和移位已經可以，但吃飯要爸爸餵、包尿布、上下樓要爸爸抱。主要照顧者是爸爸，晚上要出門外送，阿嬤住附近幫忙接放學，居服員一週來 5 天。評估紀錄中嗆咳的部分前後不一致，想請個管會後協助確認。</div>
 </section>
 
 <!-- 3 -->
-<section class="slide" data-title="傷後與服務歷程" data-clip="timeline">
+<section class="slide" data-title="服務條件" data-clip="budget">
   <div class="main">
-    <div class="kicker">02　傷後與服務歷程</div>
-    <h2>從急診到居家：<em>中間少了復健</em></h2>
+    <div class="kicker">02　服務條件</div>
+    <h2>一個月只能 <em>2 次</em>，每次 60 分鐘</h2>
     <div class="card t" style="margin-bottom:14px">
       <table>
-        <tr><th>114/11</th><td>墜落、急診、多處手術；出院準備評估 CMS 8 級，購置輪椅</td></tr>
-        <tr><th>115/01 前後</th><td>石膏移除，<b style="color:var(--terra)">未銜接復健</b></td></tr>
-        <tr><th>115/02</th><td>出準後滿 3 個月複評，CMS 降為 6 級</td></tr>
-        <tr><th>115/02 底</th><td>居家復能目標區間開始（至 115/08 底）</td></tr>
-        <tr><th>115/03</th><td>職能治療到宅 2 次（上旬、下旬，各 60 分鐘）</td></tr>
+        <tr><th>115/02</th><td>複評後核定居家復能，目標區間至 115/08 底</td></tr>
+        <tr><th>115/03</th><td>職能治療到宅 2 次（上旬、下旬）</td></tr>
+        <tr><th>時段</th><td>平日 16:40–17:40：放學後、爸爸出門工作前</td></tr>
+        <tr><th>指導對象</th><td>個案、爸爸與阿嬤</td></tr>
       </table>
     </div>
     <div class="grid g2">
-      <div class="card fill-t"><h3>已經進步</h3><p>穿脫衣物、移位、走路、家務、外出，都比出院時需要的協助少</p></div>
-      <div class="card fill-o"><h3>仍然卡住</h3><p>雙手無力需<b>家屬餵食</b>（左手稍好），拿不起水杯；上下樓腳抬不高，由爸爸抱</p></div>
+      <div class="card fill-o"><div class="big">−1,040<small> 元／月</small></div><p style="margin-top:6px">照顧服務（BA02、BA20）已用掉大部分額度，再加一組復能就超額，超出部分家庭自費</p></div>
+      <div class="card fill-a"><h3>對介入的影響</h3><p>一組 3 次做不滿，只有 2 次能示範與調整，<b>大部分練習得靠家人和居服員在兩次之間完成</b></p></div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">CMS 從 8 級降到 6 級，代表下肢和移動能力恢復了不少，但雙手還停在很需要人協助的階段。石膏拆掉以後沒有銜接醫院復健，長照的居家復能，是當時唯一進到家裡的復健資源。</div>
+  <div class="note">這頁是治療的前提條件。額度大多給了照顧服務，照顧計畫註明剩下的額度只夠一個月 2 次復能。也就是說，治療師能在現場示範、調整的機會非常少，介入設計必須從一開始就假設：大部分的練習要靠家人和居服員在兩次訪視之間完成。</div>
 </section>
 
 <!-- 4 -->
-<section class="slide" data-title="家庭與照顧者" data-clip="clock">
+<section class="slide" data-title="職能治療評估" data-clip="adl">
   <div class="main">
-    <div class="kicker">03　家庭與照顧者</div>
-    <h2>爸爸一肩扛起：<em>全職工作，也是主要照顧者</em></h2>
-    <div class="grid g3" style="margin-bottom:14px">
-      <div class="card b"><h3>爸爸</h3><p>40 多歲，全職外送，多在晚上工作；為照顧減少工時；主要決策者</p></div>
-      <div class="card a"><h3>阿嬤</h3><p>60 多歲，住附近；接放學、照看到爸爸下班</p></div>
-      <div class="card t"><h3>家中</h3><p>與爸爸、姊姊同住；媽媽未同住；靠爸爸收入與身障補助</p></div>
+    <div class="kicker">03　職能治療評估</div>
+    <h2>從人、職能、環境，看<em>卡在哪裡</em></h2>
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card o"><h3>人</h3><ul><li>骨折後上下肢肌力不足</li><li>肘、腕指關節受限，雙手無力</li><li>認知影響，<b>被動、缺乏動機</b></li><li>疼痛無法用口語表達</li></ul></div>
+      <div class="card a"><h3>職能</h3><ul><li><b>進食</b>：完全由爸爸餵</li><li><b>移動</b>：要拉著走，偶爾軟腳</li><li>如廁：全日尿布</li><li>上下樓：爸爸抱</li></ul></div>
+      <div class="card t"><h3>環境</h3><ul><li>爸爸晚上工作，時間緊</li><li>阿嬤協助接送與看顧</li><li>居服員一週 5 天在家</li><li>3 樓無電梯、浴室無扶手</li></ul></div>
     </div>
-    <div class="grid g2">
-      <div class="card o">
-        <h3>照顧者負荷（爸爸自評）</h3>
-        <ul>
-          <li><b>睡眠受到干擾</b>：每週 1–2 天哭鬧到凌晨 1–2 點</li>
-          <li><b>無法承受照顧壓力</b></li>
-          <li>孩子完全不能單獨在家</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>正式資源</h3>
-        <ul>
-          <li>家庭服務中心關心，已轉介身障資源中心</li>
-          <li>兒童身心科、骨科定期門診，爸爸開車</li>
-          <li>喘息 42 次／年，有使用意願</li>
-        </ul>
-      </div>
-    </div>
+    <div class="quote">介入順序：先讓照顧者能<b>安全地帶他移動</b>，再推進到<b>雙手參與進食</b>。</div>
   </div>
   <div class="clip"></div>
-  <div class="note">爸爸是主要照顧者，晚上要出門外送，阿嬤住附近，負責接放學和照看到爸爸下班。爸爸自評身體和生活品質都還好，但同時勾了「睡眠受到干擾」和「無法承受照顧壓力」。晚上工作、夜裡孩子哭鬧、白天還要帶孩子回診，這個家的時間表其實很緊。</div>
+  <div class="note">鍾治療師用人、職能、環境三個面向來整理。人的部分：骨折後上下肢都沒力，手肘手腕受限，加上認知影響，他大部分很被動。職能的部分：最依賴的是進食，最危險的是移動。環境的部分：爸爸時間很緊，但居服員一週 5 天在家，是可以運用的人力。所以介入的順序是：先處理安全移動，再推進雙手參與吃飯。</div>
 </section>
 
 <!-- 5 -->
-<section class="slide" data-title="溝通、情緒與行為" data-clip="voice">
+<section class="slide" data-title="目標設定" data-clip="spoon">
   <div class="main">
-    <div class="kicker">04　溝通、情緒與行為</div>
-    <h2>沒有口語，<em>用喊叫表達</em>不舒服</h2>
-    <div class="card t" style="margin-bottom:14px">
-      <table>
-        <tr><th>意識／聽力</th><td>清醒；聽力適當；視力輕度障礙</td></tr>
-        <tr><th>表達／理解</th><td><b>無法表達</b>；理解能力<b>無法判斷</b></td></tr>
-        <tr><th>情緒行為</th><td>日夜顛倒、干擾行為，各約每週 1–3 天；無攻擊、無抗拒照護</td></tr>
-        <tr><th>危險認知</th><td>常會碰到的居家危險，常不認為是危險</td></tr>
-      </table>
+    <div class="kicker">04　目標設定</div>
+    <h2>為什麼選「<em>自己把食物送進嘴裡</em>」</h2>
+    <div class="quote" style="margin-bottom:16px">提升上肢主動參與度：在部分協助下，完成「舀取食物並送入口中」的動作。</div>
+    <div class="grid g3" style="margin-bottom:14px">
+      <div class="card"><h3>有機會改善</h3><p>需要餵食主要來自骨折後雙手無力，不是發展上做不到</p></div>
+      <div class="card"><h3>天天都用得到</h3><p>一天三餐，是減輕爸爸與阿嬤負擔最直接的一項</p></div>
+      <div class="card"><h3>可以分段量化</h3><p>用「自己完成的比例」追蹤，不必一次做到全部</p></div>
     </div>
-    <div class="card o">
-      <h3>對治療的影響</h3>
-      <ul>
-        <li>因認知問題，<b>配合度不佳、大部分很被動</b>，需要家屬引導和協助</li>
-        <li>剛經歷多處骨折，疼痛只能看<b>表情、喊叫、閃躲</b>來判斷</li>
-        <li>無法用問答確認學會沒有，只能看動作表現與家屬回報</li>
-      </ul>
+    <div class="grid g2">
+      <div class="card fill-a"><div class="big">20%</div><p style="margin-top:6px">第 1 次訪視</p></div>
+      <div class="card fill-o"><div class="big">20–30%</div><p style="margin-top:6px">第 2 次訪視</p></div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">高齡復能常常是和長輩討論目標、教他自己做，但這招對小 A 幾乎不適用。他聽得到，但很難確定理解多少；骨折後的疼痛也說不出來，治療時只能看他的表情、喊叫和閃躲來調整強度。</div>
+  <div class="note">選進食當目標有三個理由：第一，需要餵食主要是骨折後雙手無力造成的，有機會改善；第二，一天三餐都會用到，是最能減輕照顧者負擔的一項；第三，可以用「自己完成的比例」分段追蹤。第一次大約兩成能在協助下完成，第二次提升到兩到三成。</div>
 </section>
 
 <!-- 6 -->
-<section class="slide" data-title="日常生活功能" data-clip="adl">
-  <div class="main">
-    <div class="kicker">05　日常生活功能（ADLs）</div>
-    <h2>巴氏量表 <em>35 分</em>：會走了，雙手還幫不上忙</h2>
-    <div class="grid g2" style="margin-bottom:14px">
-      <div class="card fill-t"><div class="big" style="color:var(--sage)">30<small> 分</small></div><p style="margin-top:6px">移位、走路滿分：可牽著走 50 公尺以上，平地輕鬆、不平地面吃力</p></div>
-      <div class="card fill-o"><div class="big">0<small> 分</small></div><p style="margin-top:6px">吃飯、洗澡、修飾、大小便、如廁、上下樓梯</p></div>
-    </div>
-    <div class="card a">
-      <ul>
-        <li><b>吃飯</b>：雙手無力，完全由家屬餵食</li>
-        <li><b>大小便</b>：無法表達如廁需求，全日使用尿布</li>
-        <li><b>穿衣</b>（5 分）：手部無力，需協助穿脫衣褲</li>
-        <li><b>IADLs</b>：不會用電話；家務全需協助；外出需爸爸陪同</li>
-      </ul>
-      <p class="muted" style="font-size:14px;margin-top:6px">巴氏量表為成人設計，8 歲兒童部分項目仍在發展中，需配合發展階段解讀。</p>
-    </div>
-  </div>
-  <div class="clip"></div>
-  <div class="note">移位和走路已經滿分，但吃飯、如廁、大小便控制都是 0 分。大小便控制和自閉症、發展階段有關，不是短期復能能改變的。吃飯不一樣：需要餵食很大一部分是因為骨折後雙手無力，這是最有機會改善、也最能減輕爸爸和阿嬤每天負擔的一項，所以復能目標選了進食。</div>
-</section>
-
-<!-- 7 -->
-<section class="slide" data-title="身體功能與健康風險" data-clip="risk">
-  <div class="main">
-    <div class="kicker">06　身體功能與健康風險</div>
-    <h2>四個要一起看的<em>風險訊號</em></h2>
-    <div class="grid g2" style="margin-bottom:14px">
-      <div class="card o"><h3>上肢關節與肌力</h3><p>肘、腕指關節受限；雙手手指無力，左手稍好；骨折後整體肌力退化</p></div>
-      <div class="card a"><h3>進食與營養</h3><p>身高 123 公分、體重 22 公斤，<b>BMI 14.5</b>；外食為主，每餐吃不完</p></div>
-      <div class="card o"><h3>吞嚥</h3><p>量表勾選「吃東西或喝水會嗆咳」，從未接受吞嚥訓練</p></div>
-      <div class="card a"><h3>跌倒與安全</h3><p>移位走路不穩、偶爾軟腳；無法不用手連續站起 5 次；危險認知不足</p></div>
-    </div>
-    <div class="card fill-a">
-      <p style="font-size:15px"><b>紀錄需要釐清：</b>吞嚥勾「嗆咳」，綜合描述寫「進食無嗆咳」；跌倒勾「一年內 2 次以上」，描述寫「近一年無跌倒」。這兩處會影響是否轉介吞嚥評估與防跌介入。</p>
-    </div>
-  </div>
-  <div class="clip"></div>
-  <div class="note">BMI 14.5 在 8 歲男孩屬於偏低邊緣，加上外食、每餐吃不完，需要營養的專業一起看。嗆咳這件事在同一份評估裡前後不一致，想請個管會後協助確認，因為這會決定要不要轉介語言治療做吞嚥評估。</div>
-</section>
-
-<!-- 8 -->
-<section class="slide" data-title="居家環境" data-clip="stairs">
-  <div class="main">
-    <div class="kicker">07　居家環境</div>
-    <h2>住 <em>3 樓、沒有電梯</em>，上下樓是 0 分</h2>
-    <div class="grid g2" style="margin-bottom:14px">
-      <div class="card o"><h3>3 樓公寓，無電梯</h3><p>舊式公寓（樓中樓），樓梯狹窄有扶手；每次出門都由爸爸抱上抱下</p></div>
-      <div class="card a"><h3>浴室與門檻</h3><p>浴室高門檻、無扶手；室內到室外也有門檻</p></div>
-      <div class="card t"><h3>已經改善</h3><p>陽台加裝隱形鐵窗；已購高背輪椅；孩子睡在客廳</p></div>
-      <div class="card b"><h3>社會參與</h3><p>每天和親友聯絡；沒有參加團體活動；目前不需服務協助</p></div>
-    </div>
-    <div class="quote">上學、回診的每一趟外出，都要有人抱他走 3 層樓。<br>照顧者的體力負荷，集中在這一段。</div>
-  </div>
-  <div class="clip"></div>
-  <div class="note">這頁說明為什麼訓練裡放了爬樓梯和下肢肌力：目標寫的是進食，但這個家每天真正的體力瓶頸是樓梯。浴室高門檻沒有扶手，也是後續可以用輔具與居家無障礙額度處理的地方。</div>
-</section>
-
-<!-- 9 -->
-<section class="slide" data-title="長照服務配置" data-clip="budget">
-  <div class="main">
-    <div class="kicker">08　長照服務配置</div>
-    <h2>額度給了照顧服務，<em>復能一個月只能 2 次</em></h2>
-    <div class="card t" style="margin-bottom:14px">
-      <table>
-        <tr><th>BA02 基本日常照顧</th><td>23 次／月（一週 5 天：翻身移位、換尿布）</td></tr>
-        <tr><th>BA20 陪伴服務</th><td>115 單位／月（一週 5 天，陪伴看視、維護安全）</td></tr>
-        <tr><th>CA07 居家復能</th><td>1 組／月，目標區間至 115/08 底</td></tr>
-        <tr><th>喘息／輔具／交通</th><td>喘息 42 次／年；已購輪椅尚有餘額；爸爸自行接送</td></tr>
-      </table>
-    </div>
-    <div class="grid g2">
-      <div class="card fill-o"><div class="big">−1,040<small> 元／月</small></div><p style="margin-top:6px">給付額度約 2.8 萬，照顧服務已排約 2.46 萬，再加 CA07 一組就超額，超出部分自費</p></div>
-      <div class="card fill-a"><h3>照顧計畫註明</h3><p>剩餘額度只夠<b>一個月使用 2 次復能</b>，請服務單位注意次數。一組 3 次因此做不滿。</p></div>
-    </div>
-  </div>
-  <div class="clip"></div>
-  <div class="note">這解釋了為什麼 3 月只有 2 次。一組居家復能是 3 次，但額度只夠 2 次，所以系統上顯示「未滿一照顧組合之次數」。這是制度面的困境：家庭超額要自費，照顧服務和復能都需要，要怎麼取捨，是想請大家一起討論的。</div>
-</section>
-
-<!-- 10 -->
-<section class="slide" data-title="復能目標" data-clip="spoon">
-  <div class="main">
-    <div class="kicker">09　復能目標</div>
-    <h2>讓小 A <em>自己把食物送進嘴裡</em></h2>
-    <div class="quote" style="margin-bottom:16px">提升上肢主動參與度：在部分協助下，完成「舀取食物並送入口中」的動作。</div>
-    <div class="grid g3" style="margin-bottom:14px">
-      <div class="card fill-a"><div class="big">20%</div><p style="margin-top:6px">第 1 次訪視</p></div>
-      <div class="card fill-o"><div class="big">20–30%</div><p style="margin-top:6px">第 2 次訪視</p></div>
-      <div class="card"><div class="big" style="color:var(--muted)">—</div><p style="margin-top:6px">第 3 次：受額度限制未排</p></div>
-    </div>
-    <div class="grid g2">
-      <div class="card"><p><b>時段</b>　平日 16:40–17:40，放學後、爸爸出門工作前</p></div>
-      <div class="card"><p><b>指導對象</b>　個案、爸爸與阿嬤</p></div>
-    </div>
-  </div>
-  <div class="clip"></div>
-  <div class="note">目標用「參與比例」來描述：第一次大約兩成的舀食動作能在協助下自己完成，第二次提升到兩到三成。第三次因為額度只夠一個月 2 次而沒有排，系統上顯示尚未達目標。</div>
-</section>
-
-<!-- 11 -->
 <section class="slide" data-title="介入思路" data-clip="walkbelt">
   <div class="main">
-    <div class="kicker">10　介入思路</div>
+    <div class="kicker">05　介入思路</div>
     <h2>先讓他<em>站得穩、走得動</em>，再談手</h2>
     <div class="card o" style="margin-bottom:12px">
       <h3>① 下肢與移動（優先）</h3>
@@ -328,13 +196,13 @@ body:hover #hud{opacity:.9}
     <p class="muted" style="font-size:15px">以上動作訓練都已指導家屬，在居家環境中練習。</p>
   </div>
   <div class="clip"></div>
-  <div class="note">鍾治療師的順序是這樣想的：照顧者每天最吃力的是帶他移動，所以先做下肢。走路時孩子偶爾會軟腳，用腰帶或抓好腋下和褲頭，是讓爸爸和阿嬤安全帶他走的關鍵。上肢從被動抓握和撐地開始，因為他還不會主動伸手。骨盆的重心轉移，則是坐著吃飯、站著做事的基礎。</div>
+  <div class="note">介入分三條線。第一條是下肢與移動，這是優先的，因為照顧者每天最吃力的就是帶他移動。他偶爾會軟腳，所以教家屬用腰帶，或抓好腋下和褲頭來帶他走，這是安全的關鍵。第二條是上肢：他還不會主動伸手，所以先被動帶著抓握，再用手撐地板練力量，之後才往精細動作推進。第三條是軀幹骨盆：練重心前後左右移動再回到正中，這是坐著吃飯、站著做事的基礎。</div>
 </section>
 
-<!-- 12 -->
-<section class="slide" data-title="兩次訪視內容" data-clip="practice">
+<!-- 7 -->
+<section class="slide roomy" data-title="訪視內容與進階" data-clip="practice">
   <div class="main">
-    <div class="kicker">11　兩次訪視內容</div>
+    <div class="kicker">06　兩次訪視：活動設計與進階</div>
     <h2>動作不難，<em>重點是每天做</em></h2>
     <div class="grid g2" style="margin-bottom:14px">
       <div class="card t">
@@ -364,13 +232,13 @@ body:hover #hud{opacity:.9}
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">居家練習刻意挑家裡隨時能做、不需要器材的動作。撿地上的東西，同時練到蹲站平衡、軀幹前傾和抓放，是把三條訓練線串在同一個動作裡。</div>
+  <div class="note">兩次訪視都以同一組動作為主，第二次再進階：延長撐地時間、加入跪姿核心、撿物計次到 15 顆。居家練習刻意挑家裡隨時能做、不需要器材的動作。撿地上的東西，同時練到蹲站平衡、軀幹前傾和抓放，是把三條訓練線串在同一個動作裡。</div>
 </section>
 
-<!-- 13 -->
-<section class="slide" data-title="進食觀察" data-clip="grasp">
+<!-- 8 -->
+<section class="slide roomy" data-title="進食觀察" data-clip="grasp">
   <div class="main">
-    <div class="kicker">12　進食觀察</div>
+    <div class="kicker">07　進食觀察</div>
     <h2>卡住進食的，<em>不只是手沒力</em></h2>
     <div class="grid g3" style="margin-bottom:14px">
       <div class="card fill-o"><div class="big">0</div><p style="margin-top:6px">對吃的<b>完全沒有慾望</b>；食物放在眼前或桌上，都不會主動拿</p></div>
@@ -378,36 +246,36 @@ body:hover #hud{opacity:.9}
       <div class="card fill-a"><div class="big" style="color:#B9822A">聲光</div><p style="margin-top:6px">對玩具、聲音、高視覺刺激，也<b>沒太大興趣</b></p></div>
     </div>
     <div class="grid g2">
-      <div class="card"><h3>目前狀況</h3><p>都由爸爸餵食。手部力量、關節活動度和進食動機同時存在，單靠肌力訓練很難讓他「自己吃」。</p></div>
-      <div class="card t"><h3>建議方向</h3><p>還是要<b>多嘗試，看能不能誘發意願</b>；先被動帶著抓握，讓手習慣拿住東西，再慢慢延長時間。</p></div>
+      <div class="card"><h3>專業判斷</h3><p>手部力量、關節活動度和進食動機同時存在，單靠肌力訓練很難讓他「自己吃」。</p></div>
+      <div class="card t"><h3>處理方式</h3><p>還是要<b>多嘗試，看能不能誘發意願</b>；先被動帶著抓握，讓手習慣拿住東西，再慢慢延長時間。</p></div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">這是鍾治療師覺得最難的地方。小 A 不只是手沒力，他對食物沒有興趣，連玩具、聲光刺激都很難讓他伸手。目標寫的是「舀取食物送入口」，但其實第一步是「願意把手伸向食物」。</div>
+  <div class="note">這是鍾治療師覺得最難的地方。小 A 不只是手沒力，他對食物沒有興趣，連玩具、聲光刺激都很難讓他伸手。目標寫的是「舀取食物送入口」，但實際上的第一步是「願意把手伸向食物」。所以處理方式是先被動帶著抓握，讓手習慣拿住東西，同時持續嘗試找出能誘發他意願的東西。</div>
 </section>
 
-<!-- 14 -->
-<section class="slide" data-title="困境" data-clip="tiles">
+<!-- 9 -->
+<section class="slide" data-title="介入困境" data-clip="tiles">
   <div class="main">
-    <div class="kicker">13　服務過程中的困境</div>
-    <h2>我們卡在哪裡</h2>
+    <div class="kicker">08　介入的困境</div>
+    <h2>復能過程中，<em>我們卡在哪裡</em></h2>
     <div class="grid g2">
-      <div class="card o"><h3>1　被動、缺乏動機</h3><p>認知影響配合度，大部分很被動；食物、玩具、聲光都難引起興趣</p></div>
-      <div class="card o"><h3>2　額度限制次數</h3><p>只夠一個月 2 次，一組做不滿；能示範與調整的機會很少</p></div>
-      <div class="card o"><h3>3　移動的安全</h3><p>下肢無力、偶爾軟腳；如廁、就醫、上下樓都吃力，有跌倒風險</p></div>
-      <div class="card a"><h3>4　復健與工作難兩全</h3><p>石膏移除後未銜接復健，但一直跑醫院會影響爸爸工作</p></div>
-      <div class="card a"><h3>5　練習頻率</h3><p>動作不難，<b>高頻率執行</b>才會進步；爸爸夜裡也睡不好</p></div>
-      <div class="card a"><h3>6　超出 CA07 的風險</h3><p>嗆咳紀錄不一致、BMI 偏低、浴室無扶手、3 樓無電梯</p></div>
+      <div class="card o"><h3>1　被動、缺乏動機</h3><p>認知影響配合度；食物、玩具、聲光都難引起興趣</p></div>
+      <div class="card o"><h3>2　次數太少</h3><p>一個月 2 次，能示範與調整的機會很少</p></div>
+      <div class="card o"><h3>3　移動的安全</h3><p>下肢無力、偶爾軟腳，帶他如廁、就醫、上下樓都吃力</p></div>
+      <div class="card a"><h3>4　復健斷層</h3><p>石膏移除後未銜接醫院復健，居家復能成了唯一資源</p></div>
+      <div class="card a"><h3>5　練習頻率</h3><p>動作不難，<b>高頻率執行</b>才會進步；爸爸時間與睡眠都很緊</p></div>
+      <div class="card a"><h3>6　超出復能範圍</h3><p>嗆咳、營養、浴室無扶手、3 樓無電梯，需要其他專業</p></div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">第 1 點是臨床上最難的；第 4、5 點是爸爸最在意的，下一頁會說明爸爸的想法。</div>
+  <div class="note">整理成六個困境。第 1 點是臨床上最難的；第 2、5 點是制度和家庭條件的限制，次數少，所以頻率只能靠家裡；第 6 點則提醒我們，有些需求不是多做幾次復能就能解決，需要個管協助連結其他專業。</div>
 </section>
 
-<!-- 15 -->
-<section class="slide" data-title="爸爸的想法" data-clip="freq">
+<!-- 10 -->
+<section class="slide roomy" data-title="照顧者導向的策略" data-clip="freq">
   <div class="main">
-    <div class="kicker">14　從爸爸的角度</div>
+    <div class="kicker">09　照顧者導向的策略</div>
     <h2>對爸爸來說，<em>居家服務減輕負擔</em>最重要</h2>
     <div class="grid g2" style="margin-bottom:16px">
       <div class="card b">
@@ -430,13 +298,13 @@ body:hover #hud{opacity:.9}
     <div class="quote">復健不一定要多跑醫院：<br>醫院教方法、治療師示範調整、家屬和居服員天天做。</div>
   </div>
   <div class="clip"></div>
-  <div class="note">照顧計畫裡，照專和 A 單位都勾了「陪同運動」和「協助行走」。居服員一週 5 天在家，是最有機會把練習做到高頻率的人，前提是有人教他們怎麼做、怎麼做才安全。這也是鍾治療師最想提出來討論的方向。</div>
+  <div class="note">從爸爸的角度，居家服務能減輕負擔是最重要的；一直跑醫院復健會影響他的工作。所以鍾治療師的建議是：積極跟醫院學，把醫院教的動作帶回家用，甚至指導居服員一起操作。照顧計畫裡也已經勾了「陪同運動」和「協助行走」。動作本身不難，關鍵是有沒有高頻率地執行。</div>
 </section>
 
-<!-- 16 -->
-<section class="slide" data-title="治療者反思" data-clip="embed">
+<!-- 11 -->
+<section class="slide roomy" data-title="治療者反思" data-clip="embed">
   <div class="main">
-    <div class="kicker">15　回頭看：治療者的反思</div>
+    <div class="kicker">10　回頭看：治療者的反思</div>
     <h2>只有 2 次，<em>時間花在哪裡最值得？</em></h2>
     <div class="grid g2">
       <div class="card t">
@@ -451,23 +319,56 @@ body:hover #hud{opacity:.9}
       <div class="card o">
         <h3>可以再加強</h3>
         <ul>
-          <li><b>找出能誘發動機的東西</b>：請家屬記錄他偶爾有反應的食物、物品</li>
+          <li>把其中一次訪視安排在<b>居服員在場</b>的時段，直接示範</li>
           <li>把練習<b>嵌進日常照顧</b>：換尿布前站、移位時重心轉移、餵食時先握湯匙</li>
-          <li>做一張<b>給居服員的動作卡</b></li>
+          <li>請家屬記錄他<b>偶爾有反應</b>的食物、物品，當作誘發動機的線索</li>
           <li>上肢撐地的進階，<b>與骨科門診確認</b>限制</li>
-          <li>評估進食輔具：粗柄湯匙、防滑墊、吸盤碗</li>
         </ul>
       </div>
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">如果再接一次，在只有 2 次的條件下，可以把其中一次安排在居服員在場的時段，直接教居服員；也請家屬在兩次之間，記錄孩子對哪些東西有一點點反應，作為誘發動機的線索。</div>
+  <div class="note">回頭看，做到的部分是：先處理移動安全、第二次有明確進階、居家練習簡單可量化。可以再加強的是：把一次訪視安排在居服員在場的時段直接教；把練習嵌進每天本來就要做的照顧動作裡，例如換尿布前扶著站、移位時練重心、餵食時先讓他握住湯匙；以及請家屬記錄孩子偶爾有反應的東西，作為誘發動機的線索。</div>
 </section>
 
-<!-- 17 -->
-<section class="slide" data-title="討論議題" data-clip="q">
+<!-- 12 -->
+<section class="slide" data-title="專業建議：復能介入" data-clip="actioncard">
   <div class="main">
-    <div class="kicker">16　想請大家一起討論</div>
+    <div class="kicker">11　專業建議（一）復能介入</div>
+    <h2>給後續服務的<em>治療師與服務單位</em></h2>
+    <div class="grid g2">
+      <div class="card o"><h3>目標再拆小</h3><p>先從「願意伸手、握住 10 秒」開始，再到舀取、送口；每次記錄自己完成的比例</p></div>
+      <div class="card a"><h3>練習嵌進照顧</h3><p>換尿布前扶站、移位時重心轉移、餵食時先握湯匙；不另外排時間</p></div>
+      <div class="card t"><h3>一張動作卡</h3><p>腰帶帶走、撐地、撿物、重心轉移：圖示＋次數＋安全提醒，給家屬與居服員</p></div>
+      <div class="card b"><h3>進食環境調整</h3><p>粗柄湯匙、防滑墊、吸盤碗；調整椅高與桌高，配合肘腕受限的角度</p></div>
+      <div class="card o"><h3>找出動機線索</h3><p>從家屬、特教老師觀察他偶爾有反應的食物或物品，用在進食練習</p></div>
+      <div class="card a"><h3>安全與醫療確認</h3><p>上肢負重進階先和骨科確認；疼痛看表情與閃躲，隨時調整強度</p></div>
+    </div>
+  </div>
+  <div class="clip"></div>
+  <div class="note">第一部分的建議給後續接手的治療師和服務單位。目標再拆小，從願意伸手、握住開始；練習嵌進照顧時段；做一張動作卡給家屬和居服員，右邊動畫就是動作卡的示意；調整進食輔具和桌椅；從家屬和特教老師那裡找出動機線索；上肢負重進階前，先和骨科確認。</div>
+</section>
+
+<!-- 13 -->
+<section class="slide roomy" data-title="專業建議：資源連結" data-clip="next">
+  <div class="main">
+    <div class="kicker">12　專業建議（二）資源連結</div>
+    <h2>需要<em>個管協助</em>的部分</h2>
+    <div class="grid g3">
+      <div class="card b"><h3>醫療與專業</h3><ul><li>醫院復健以「學方法」為主，減少爸爸請假</li><li>確認嗆咳，必要時吞嚥評估</li><li>營養師：BMI 偏低</li><li>夜間哭鬧回兒童身心科</li></ul></div>
+      <div class="card o"><h3>照顧人力</h3><ul><li>居服員的陪同運動、協助行走，納入動作卡內容</li><li>治療師示範時，請居服員在場</li><li>善用每年 42 次喘息</li></ul></div>
+      <div class="card t"><h3>輔具與環境</h3><ul><li>步行腰帶</li><li>進食輔具</li><li>浴室扶手、門檻、洗澡椅</li><li>運用輔具與無障礙剩餘額度</li></ul></div>
+    </div>
+    <p class="muted" style="font-size:14px;margin-top:14px">實際可用的服務碼與補助資格，請個管依縣市規定與家庭意願確認。</p>
+  </div>
+  <div class="clip"></div>
+  <div class="note">第二部分是需要個管協助連結的資源：醫院復健以學方法為主、確認嗆咳並視需要做吞嚥評估、營養師評估、夜間哭鬧回兒童身心科；照顧人力上，讓居服員一起執行動作卡內容；輔具與環境上，步行腰帶、進食輔具、浴室扶手。實際可用的服務與補助資格，請個管依縣市規定和家庭意願確認。</div>
+</section>
+
+<!-- 14 -->
+<section class="slide roomy" data-title="討論議題" data-clip="q">
+  <div class="main">
+    <div class="kicker">13　想請大家一起討論</div>
     <h2>四個問題</h2>
     <div class="grid g2">
       <div class="card b"><h3>Q1　居服員能不能一起帶練習？</h3><p>治療師示範、居服員在日常照顧中執行，範圍與安全怎麼界定？誰來確認做得對？</p></div>
@@ -477,26 +378,10 @@ body:hover #hud{opacity:.9}
     </div>
   </div>
   <div class="clip"></div>
-  <div class="note">時間有限的話挑一到兩題就好。Q1、Q2 最需要個管協助；Q4 是臨床上最想聽大家經驗的。另外，嗆咳紀錄前後不一致的部分，請個管會後協助確認。</div>
+  <div class="note">時間有限的話挑一到兩題就好。Q1、Q2 最需要個管協助；Q4 是臨床上最想聽大家經驗的。</div>
 </section>
 
-<!-- 18 -->
-<section class="slide" data-title="後續建議" data-clip="next">
-  <div class="main">
-    <div class="kicker">17　後續建議（供個管參考）</div>
-    <h2>建議的<em>下一步</em></h2>
-    <div class="grid g3">
-      <div class="card o"><h3>練習落實</h3><ul><li>治療師示範給居服員，練習嵌進照顧時段</li><li>動作卡：撐地、撿物、重心轉移、帶走安全</li><li>醫院復健以「學方法」為主</li></ul></div>
-      <div class="card b"><h3>醫療與專業</h3><ul><li>骨科確認上肢負重限制</li><li>確認嗆咳，必要時吞嚥評估</li><li>營養師：BMI 偏低</li><li>夜間哭鬧回兒童身心科</li></ul></div>
-      <div class="card t"><h3>輔具與喘息</h3><ul><li>步行腰帶、粗柄湯匙、防滑墊、吸盤碗</li><li>浴室扶手、門檻、洗澡椅</li><li>善用每年 42 次喘息</li></ul></div>
-    </div>
-    <p class="muted" style="font-size:14px;margin-top:14px">實際可用的服務碼與補助資格，請個管依縣市規定與家庭意願確認。</p>
-  </div>
-  <div class="clip"></div>
-  <div class="note">這些是建議方向，實際可用的服務與補助資格，請個管依照縣市規定和家庭意願確認。</div>
-</section>
-
-<!-- 19 -->
+<!-- 15 -->
 <section class="slide cover" data-title="結語" data-clip="end">
   <div class="main">
     <div class="kicker">結語</div>
