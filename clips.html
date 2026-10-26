@@ -129,12 +129,12 @@ fracture:{L:7,draw(t){
     s+=`<path d="M${R(p.x+5)} ${R(p.y)} C ${R(p.x+30)} ${R(p.y)}, 140 ${ly}, 158 ${ly}" fill="none" stroke="${C.terra}" stroke-width="1.4" stroke-dasharray="3 3" opacity="${R(kk*.8)}"/>`;
     s+=rect(160,ly-13,96,26,13,C.white,`stroke="${C.rose}" stroke-width="1.5" opacity="${R(kk)}"`)+T(208,ly+5,l,{size:13.5,op:kk});
   });
-  s+=t<5?cap(['雙手多處、左大腿、頸椎骨折','114 年 11 月自家中高處墜落'],sg(t,.3,.8)):cap(['石膏拆了','還沒有銜接復健'],1);
+  s+=t<5?cap(['雙手多處、左大腿、頸椎骨折','114 年 11 月自家中高處墜落'],sg(t,.3,.8)):cap(['石膏已拆','目前約每週回醫院復健 1 次'],1);
   return s;}},
 
 timeline:{L:8,draw(t){
   let s=bgx(0)+head('從急診到居家',t);
-  const items=[['114/11','墜落、急診、多處手術'],['114/11','出院準備評估・CMS 8 級'],['115/01 前後','石膏移除，未銜接復健'],['115/02','複評，CMS 降為 6 級'],['115/02 底','居家復能目標區間開始'],['115/03','職能治療到宅 2 次']];
+  const items=[['114/11','墜落、急診、多處手術'],['114/11','出院準備評估・CMS 8 級'],['115/01 前後','石膏移除，每週回醫院復健'],['115/02','複評，CMS 降為 6 級'],['115/02 底','居家復能目標區間開始'],['115/03','職能治療到宅 2 次']];
   const y0=104,st=50;
   s+=ln({x:48,y:y0},{x:48,y:y0+(st*5)*ez(sg(t,.2,5.2))},4,C.cream);
   items.forEach(([d,w],i)=>{
@@ -142,7 +142,7 @@ timeline:{L:8,draw(t){
     s+=gap?circ(48,y,9,C.white,`stroke="${C.terra}" stroke-width="2.5" stroke-dasharray="3 2.5" transform="rotate(${R(t*40)} 48 ${y})"`):circ(48,y,8*k,C.sage,`stroke="#fff" stroke-width="2.5"`);
     s+=T(68,y-2,d,{a:'start',size:15,c:gap?C.terra:C.ink,op:cl(k)})+T(68,y+17,w,{a:'start',size:13,w:400,c:gap?C.terra:C.muted,op:cl(k)});
   });
-  s+=t<5.8?cap('傷後 4 個月的路',sg(t,.2,.7)):cap(['中間，少了復健這一段','居家復能成了唯一進到家裡的復健'],1);
+  s+=t<5.8?cap('傷後 4 個月的路',sg(t,.2,.7)):cap(['醫院每週 1 次','居家每天練，才是關鍵'],1);
   return s;}},
 
 clock:{L:9,draw(t){
@@ -192,7 +192,7 @@ adl:{L:7,draw(t){
 
 risk:{L:8,draw(t){
   let s=bgx(0)+head('四個風險訊號',t);
-  const it=[['肘・腕','關節受限、手沒力',C.terra],['14.5','BMI 偏低，常吃不完',C.honey],['嗆咳？','紀錄前後不一致',C.rose],['不穩','移位走路怕跌倒',C.teal]];
+  const it=[['肘・腕','關節受限、手沒力',C.terra],['14.5','BMI 偏低，常吃不完',C.honey],['嗆咳','不常見，已改善',C.rose],['不穩','移位走路怕跌倒',C.teal]];
   it.forEach(([a,b,c],i)=>{const k=bk(sg(t,.3+i*1,.9+i*1)),y=92+i*74;
     s+=grp(rect(20,y,230,62,18,C.white,`stroke="${C.cream}" stroke-width="2"`)+rect(20,y,10,62,5,c)+T(78,y+40,a,{size:23,c})+T(190,y+37,b,{size:13.5,w:400}),{x:(1-k)*260,op:cl(k*2)});});
   s+=t<5?cap('身體功能與健康'):cap(['要一起看','不只是動作的問題']);
@@ -353,14 +353,14 @@ grasp:{L:12,draw(t){
   return s;}},
 
 tiles:{L:9,draw(t){
-  let s=bgx(1)+head('我們卡在哪裡',t);
-  const it=[['被動','缺乏動機'],['額度','一月只 2 次'],['移動','軟腳易跌'],['工作','復健難兼顧'],['頻率','難天天練'],['風險','超出 CA07']];
-  const lg=['認知影響配合度，大多很被動','額度只夠一個月 2 次復能','下肢無力，偶爾軟腳','一直跑醫院會影響爸爸工作','動作不難，難在天天做','嗆咳、營養、浴室、樓梯'];
+  let s=bgx(1)+head('困境與對策',t);
+  const it=[['被動','缺乏動機'],['移動','軟腳易跌'],['頻率','要天天練'],['時間','爸爸很忙'],['嗆咳營養','已改善'],['浴室樓梯','練下肢']];
+  const lg=['→ 坐大腿誘發抓握、帶著握湯匙','→ 腰帶，或抓腋下和褲頭','→ 家屬與居服員每天帶','→ 由居服員帶運動','→ 營養補充品補足熱量','→ 洗澡椅＋練下肢與抓握'];
   const act=t<1.3?-1:Math.min(5,Math.floor((t-1.3)/1.25));
   const cols=[C.terra,C.terra,C.terra,C.honey,C.honey,C.honey];
   it.forEach(([a,b],i)=>{const k=pop(t,.2+i*.15),x=22+(i%2)*120,y=90+Math.floor(i/2)*94,on=i===act;
     s+=grp(rect(x,y,106,82,18,on?cols[i]:C.white,`stroke="${C.cream}" stroke-width="2"`)+T(x+53,y+38,a,{size:21,c:on?'#fff':cols[i]})+T(x+53,y+62,b,{size:12.5,w:400,c:on?'#fff':C.muted}),{s:k*(on?1.06:1),ox:x+53,oy:y+41});});
-  s+=cap(act<0?'六個困境':['困境 '+(act+1),lg[act]]);
+  s+=cap(act<0?'六個困境與對策':['困境 '+(act+1),lg[act]]);
   return s;}},
 
 freq:{L:8,draw(t){
@@ -369,7 +369,7 @@ freq:{L:8,draw(t){
     for(let d=0;d<28;d++){const x=38+(d%7)*27,yy=y+Math.floor(d/7)*27,on=fill(d)&&t>.4+d*.16;if(on)n++;
       g+=rect(x,yy,22,22,6,on?col:C.cream,on?'':'opacity=".7"');if(on)g+=`<path d="M${x+6} ${yy+11} l4 4 l7 -8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;}
     return g+T(232,y-10,n+' 次',{a:'end',size:15,c:col});};
-  s+=grid(110,'醫院（每次 30 分）',C.teal,d=>[1,3,5].includes(d%7)&&!(d%7===5&&Math.floor(d/7)%2));
+  s+=grid(110,'醫院（每週約 1 次）',C.teal,d=>d%7===2);
   s+=grid(262,'居家：家屬＋居服員',C.terra,d=>true);
   s+=t<4.5?cap(['醫院的 30 分鐘','拿來向治療師學方法']):cap(['家屬學會、再教居服員','多天數、高頻率才是關鍵']);
   return s;}},
@@ -405,7 +405,7 @@ embed:{L:12,draw(t){
 
 q:{L:8,draw(t){
   let s=bgx(0)+head('想請大家一起討論',t);
-  const qs=[['居服員能不能','一起帶練習？'],['額度不夠時','照顧與復能怎麼排？'],['骨折後的復健','怎麼兼顧爸爸工作？'],['對什麼都沒興趣','動機從哪裡找？']];
+  const qs=[['居服員能不能','一起帶練習？'],['家屬學會後','怎麼交接給居服員？'],['骨折後的復健','怎麼兼顧爸爸工作？'],['對什麼都沒興趣','動機從哪裡找？']];
   const i=Math.min(3,Math.floor(t/2)),tl=t-i*2,k=bk(sg(tl,0,.45)),fo=1-sg(tl,1.75,2);
   s+=grp(circ(135,170,40,[C.terra,C.teal,C.sage,C.honey][i])+T(135,180,'Q'+(i+1),{size:28,c:'#fff'})+T(135,262,qs[i][0],{size:20})+T(135,294,qs[i][1],{size:20}),{s:k,ox:135,oy:230,op:fo});
   for(let j=0;j<4;j++)s+=circ(108+j*18,340,j===i?6:4,j===i?C.terra:C.cream);
@@ -414,13 +414,13 @@ q:{L:8,draw(t){
 
 next:{L:7,draw(t){
   let s=bgx(1)+head('下一步',t);
-  const it=[['動作卡','給家屬與居服員',C.terra],['骨科・吞嚥・營養','確認限制，必要時轉介',C.teal],['輔具・浴室・喘息','減輕爸爸的負荷',C.sage]];
+  const it=[['動作卡','給家屬與居服員',C.terra],['居服員帶運動','家屬學會、交接給居服員',C.teal],['洗澡椅・營養補充','輔具與營養，簡單補足',C.sage]];
   const ic=[(x,y)=>rect(x-10,y-13,20,26,4,'#fff')+ln({x:x-5,y:y-5},{x:x+5,y:y-5},2,C.terra)+ln({x:x-5,y:y+1},{x:x+5,y:y+1},2,C.terra),
-            (x,y)=>rect(x-3.5,y-11,7,22,2,'#fff')+rect(x-11,y-3.5,22,7,2,'#fff'),
+            (x,y)=>`<path d="M${x} ${y+10} C ${x-16} ${y-2} ${x-9} ${y-15} ${x} ${y-5} C ${x+9} ${y-15} ${x+16} ${y-2} ${x} ${y+10} Z" fill="#fff"/>`,
             (x,y)=>`<path d="M${x-12} ${y+10} V${y-2} L${x} ${y-12} L${x+12} ${y-2} V${y+10} Z" fill="#fff"/>`];
   it.forEach(([a,b,c],i)=>{const k=bk(sg(t,.4+i*.9,1+i*.9)),y=96+i*92;
     s+=grp(rect(20,y,230,76,20,C.white,`stroke="${C.cream}" stroke-width="2"`)+circ(58,y+38,22,c)+ic[i](58,y+38)+T(92,y+34,a,{a:'start',size:16})+T(92,y+56,b,{a:'start',size:12.5,w:400,c:C.muted}),{x:(1-k)*-260,op:cl(k*2)});});
-  s+=cap(['請個管協助','一起連結資源']);
+  s+=cap(['不需要更多專業','需要每天有人帶著練']);
   return s;}},
 
 actioncard:{L:12,draw(t){
