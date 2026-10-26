@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>短影音動畫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=block" rel="stylesheet">
+<style>
+html,body{margin:0;background:#FFF8EE}
+#v{width:540px;height:960px;display:block}
+#pick{position:fixed;top:4px;left:560px;font:14px sans-serif}
+</style>
+</head>
+<body>
+<svg id="v" viewBox="0 0 270 480" xmlns="http://www.w3.org/2000/svg"></svg>
+<script>
+const FONT="'LXGW WenKai TC','PingFang TC','Noto Sans TC',sans-serif";
+const C={bg:'#FFF8EE',ink:'#4A3426',muted:'#9A8573',terra:'#D9734E',honey:'#EDB45A',sage:'#7FA88B',rose:'#E8A598',teal:'#5E9C98',cream:'#F6E7CF',white:'#FFFDF8',skin:'#F6CFAE',hair:'#5A3E2E',kidShirt:'#EDB45A',kidPants:'#7FA88B',dadShirt:'#5E9C98',dadPants:'#5A4636'};
+const R=v=>(+v).toFixed(1);
+const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const sg=(t,a,b)=>cl((t-a)/(b-a));
+const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+const bk=x=>{x=cl(x);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const lerp=(a,b,k)=>a+(b-a)*k;
+const lp=(p,q,k)=>({x:lerp(p.x,q.x,k),y:lerp(p.y,q.y,k)});
+const D=Math.PI/180;
+
+function T(x,y,s,o={}){return `<text x="${R(x)}" y="${R(y)}" font-size="${o.size||16}" fill="${o.c||C.ink}" text-anchor="${o.a||'middle'}" font-weight="${o.w||700}" opacity="${o.op==null?1:o.op}" font-family="${FONT}">${s}</text>`}
+function rect(x,y,w,h,r,fill,o=''){return `<rect x="${R(x)}" y="${R(y)}" width="${R(w)}" height="${R(h)}" rx="${r}" fill="${fill}" ${o}/>`}
+function circ(x,y,r,fill,o=''){return `<circle cx="${R(x)}" cy="${R(y)}" r="${R(Math.max(0,r))}" fill="${fill}" ${o}/>`}
+function ln(a,b,w,c,o=''){return `<line x1="${R(a.x)}" y1="${R(a.y)}" x2="${R(b.x)}" y2="${R(b.y)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" ${o}/>`}
+function poly(pts,w,c,op=1){return `<polyline points="${pts.map(p=>R(p.x)+','+R(p.y)).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`}
+function pop(t,a){return bk(sg(t,a,a+.45))}
+function grp(inner,{x=0,y=0,s=1,op=1,rot=0,ox=0,oy=0}={}){return `<g opacity="${R(op)}" transform="translate(${R(x)} ${R(y)}) translate(${R(ox)} ${R(oy)}) rotate(${R(rot)}) scale(${R(s)}) translate(${R(-ox)} ${R(-oy)})">${inner}</g>`}
+
+function bgx(v=0){
+  const b=[[ [40,70,60,C.rose],[240,170,70,C.sage],[60,330,80,C.honey] ],[ [230,80,70,C.honey],[30,220,60,C.sage],[220,360,70,C.rose] ]][v%2];
+  return rect(0,0,270,480,0,C.bg)+b.map(q=>circ(q[0],q[1],q[2],q[3],'opacity=".16"')).join('');
+}
+function head(title,t){
+  const k=sg(t,0,.5);
+  return T(135,58,title,{size:21,op:k})+`<path d="M${R(135-70*k)} 68 q 18 6 35 0 t 35 0 t 35 0 t 35 0" fill="none" stroke="${C.honey}" stroke-width="3" stroke-linecap="round" opacity="${R(k*.9)}" transform="translate(${R(70*(1-k))} 0)"/>`;
+}
+function cap(lines,op=1){
+  if(typeof lines==='string')lines=[lines];
+  const h=lines.length>1?62:42,y=446-h;
+  let s=rect(16,y,238,h,18,C.white,`stroke="${C.cream}" stroke-width="2" opacity="${op}"`);
+  lines.forEach((l,i)=>s+=T(135,y+(lines.length>1?26+i*23:27),l,{size:i?14:16.5,c:i?C.muted:C.ink,w:i?400:700,op}));
+  return s;
+}
+function pill(x,y,txt,col,k=1,size=15){
+  const w=txt.length*size*0.95+26;
+  return grp(rect(x-w/2,y-17,w,34,17,col)+T(x,y+5.5,txt,{size,c:'#fff'}),{s:k,ox:x,oy:y,op:cl(k*1.5)});
+}
+
+/* ---------- figure ---------- */
+function ik(a,b,l1,l2,side){
+  let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+  d=Math.min(Math.max(d,Math.abs(l1-l2)+.01),l1+l2-.01);
+  const an=Math.atan2(dy,dx),c=(l1*l1+d*d-l2*l2)/(2*l1*d),al=Math.acos(cl(c,-1,1));
+  return [{x:a.x+l1*Math.cos(an+side*al),y:a.y+l1*Math.sin(an+side*al)},{x:a.x+d*Math.cos(an),y:a.y+d*Math.sin(an)}];
+}
+function fig(o){
+  const s=o.s||1,L={t:30*s,ua:16*s,fa:15*s,th:19*s,sh:19*s,hr:13*s};
+  const shirt=o.shirt||C.kidShirt,pants=o.pants||C.kidPants,lw=8.5*s;
+  const hip=o.hip,ta=(o.ta||0)*D,u={x:Math.sin(ta),y:-Math.cos(ta)};
+  const sho={x:hip.x+u.x*L.t,y:hip.y+u.y*L.t};
+  const ha=ta+(o.ha||0)*D,neck={x:sho.x+u.x*2*s,y:sho.y+u.y*2*s};
+  const hc={x:neck.x+Math.sin(ha)*L.hr,y:neck.y-Math.cos(ha)*L.hr};
+  const fN=o.fN||{x:hip.x+3*s,y:hip.y+L.th+L.sh-.5},fF=o.fF||{x:hip.x-3*s,y:hip.y+L.th+L.sh-.5};
+  const [kN,eN]=ik(hip,fN,L.th,L.sh,-1),[kF,eF]=ik(hip,fF,L.th,L.sh,-1);
+  const hang={x:sho.x+3*s,y:sho.y+L.ua+L.fa};
+  const hN=o.hN||hang,hF=o.hF||{x:hang.x-5*s,y:hang.y};
+  const [elN,wN]=ik(sho,hN,L.ua,L.fa,1),[elF,wF]=ik(sho,hF,L.ua,L.fa,1);
+  const shoe=p=>`<ellipse cx="${R(p.x+2.5*s)}" cy="${R(p.y)}" rx="${R(5.5*s)}" ry="${R(3.2*s)}" fill="${C.ink}"/>`;
+  let g='';
+  g+=poly([hip,kF,eF],lw,pants,.55)+shoe(eF);
+  g+=poly([sho,elF,wF],lw*.85,shirt,.55)+circ(wF.x,wF.y,3.6*s,C.skin,'opacity=".8"');
+  g+=ln(hip,sho,16*s,shirt)+circ(hip.x,hip.y,8.5*s,pants);
+  g+=poly([hip,kN,eN],lw,pants)+shoe(eN);
+  g+=circ(hc.x-2.5*s,hc.y-2.5*s,L.hr,o.hair||C.hair);
+  g+=circ(hc.x+1*s,hc.y+.8*s,L.hr*.93,C.skin);
+  g+=circ(hc.x-4*s,hc.y-7*s,L.hr*.62,o.hair||C.hair);
+  if(o.eyes!=='closed')g+=circ(hc.x+L.hr*.5,hc.y-1*s,1.7*s,C.ink);
+  else g+=ln({x:hc.x+L.hr*.35,y:hc.y-1*s},{x:hc.x+L.hr*.65,y:hc.y-1*s},1.4*s,C.ink);
+  g+=circ(hc.x+L.hr*.32,hc.y+L.hr*.38,2.6*s,C.rose,'opacity=".75"');
+  if(o.mouth)g+=`<ellipse cx="${R(hc.x+L.hr*.78)}" cy="${R(hc.y+L.hr*.42)}" rx="${R(1.8*s)}" ry="${R(o.mouth*s)}" fill="${C.ink}"/>`;
+  const arm=poly([sho,elN,wN],lw*.85,shirt)+circ(wN.x,wN.y,3.8*s,C.skin);
+  return {g,arm,all:g+arm,hip,sho,hc,kN,eN,elN,wN,L};
+}
+function walk(hx,ground,ph,s=1,stride=8){
+  const f=a=>({x:hx+stride*s*Math.sin(a),y:ground-5*s*Math.max(0,Math.cos(a))});
+  return {hip:{x:hx,y:ground-37*s-1.2*s*Math.abs(Math.cos(ph))},fN:f(ph),fF:f(ph+Math.PI)};
+}
+function ground(y,t,speed=0){
+  let s=ln({x:10,y},{x:260,y},3,C.cream);
+  if(speed){const off=(t*speed)%26;for(let x=10-off;x<260;x+=26)if(x>10)s+=ln({x,y:y+8},{x:x+9,y:y+8},2.5,C.cream);}
+  return s;
+}
+function arc(cx,cy,r,h1,h2){
+  const a1=(h1/24)*2*Math.PI-Math.PI/2,a2=(h2/24)*2*Math.PI-Math.PI/2;
+  const p1={x:cx+r*Math.cos(a1),y:cy+r*Math.sin(a1)},p2={x:cx+r*Math.cos(a2),y:cy+r*Math.sin(a2)};
+  return `M${R(p1.x)} ${R(p1.y)} A${r} ${r} 0 ${(h2-h1)>12?1:0} 1 ${R(p2.x)} ${R(p2.y)}`;
+}
+
+/* ---------- clips ---------- */
+const CLIPS={
+cover:{L:6,draw(t){
+  let s=bgx(0)+circ(135,260,92,C.honey,'opacity=".22"');
+  const bob=Math.sin(t*2.4)*1.2;
+  const k=fig({hip:{x:135,y:300+bob},fN:{x:139,y:338},fF:{x:131,y:338},hN:{x:146,y:322+bob}});
+  s+=ground(340,t)+k.all;
+  s+=pill(80,118,'8 歲',C.terra,pop(t,.5));
+  s+=pill(190,150,'自閉症',C.teal,pop(t,1.1));
+  s+=pill(86,190,'墜落多處骨折',C.sage,pop(t,1.7),14);
+  s+=T(135,58,'小 A 的居家復能',{size:23,op:sg(t,0,.5)});
+  s+=cap(['一個 8 歲孩子，和他的家','線上個案研討'],sg(t,2.3,2.9));
+  return s;}},
+
+fracture:{L:7,draw(t){
+  let s=bgx(1)+head('傷後的身體',t)+ground(368,t);
+  const k=fig({hip:{x:92,y:331},fN:{x:96,y:367},fF:{x:88,y:367},hN:{x:112,y:356},hF:{x:104,y:358}});
+  s+=k.all;
+  const pts=[[lp(k.sho,k.elN,.3),'肱骨近端'],[lp(k.sho,k.elN,.85),'肱骨遠端'],[k.elN,'尺骨鷹嘴突'],[lp(k.elN,k.wN,.8),'橈骨遠端'],[lp(k.hip,k.kN,.55),'左股骨幹'],[lp(k.sho,k.hc,.42),'第二頸椎']];
+  pts.forEach(([p,l],i)=>{
+    const a=.5+i*.65,kk=sg(t,a,a+.3);if(!kk)return;
+    const ly=112+i*36,pulse=(t-a)%1.4/1.4;
+    s+=circ(p.x,p.y,6+pulse*9,C.terra,`opacity="${R(.35*(1-pulse))}"`)+circ(p.x,p.y,5,C.terra,`stroke="#fff" stroke-width="1.5"`);
+    s+=`<path d="M${R(p.x+5)} ${R(p.y)} C ${R(p.x+30)} ${R(p.y)}, 140 ${ly}, 158 ${ly}" fill="none" stroke="${C.terra}" stroke-width="1.4" stroke-dasharray="3 3" opacity="${R(kk*.8)}"/>`;
+    s+=rect(160,ly-13,96,26,13,C.white,`stroke="${C.rose}" stroke-width="1.5" opacity="${R(kk)}"`)+T(208,ly+5,l,{size:13.5,op:kk});
+  });
+  s+=t<5?cap(['雙手多處、左大腿、頸椎骨折','114 年 11 月自家中高處墜落'],sg(t,.3,.8)):cap(['石膏拆了','還沒有銜接復健'],1);
+  return s;}},
+
+timeline:{L:8,draw(t){
+  let s=bgx(0)+head('從急診到居家',t);
+  const items=[['114/11','墜落、急診、多處手術'],['114/11','出院準備評估・CMS 8 級'],['115/01 前後','石膏移除，未銜接復健'],['115/02','複評，CMS 降為 6 級'],['115/02 底','居家復能目標區間開始'],['115/03','職能治療到宅 2 次']];
+  const y0=104,st=50;
+  s+=ln({x:48,y:y0},{x:48,y:y0+(st*5)*ez(sg(t,.2,5.2))},4,C.cream);
+  items.forEach(([d,w],i)=>{
+    const a=.3+i*.85,k=pop(t,a);if(!k)return;const y=y0+i*st,gap=i===2;
+    s+=gap?circ(48,y,9,C.white,`stroke="${C.terra}" stroke-width="2.5" stroke-dasharray="3 2.5" transform="rotate(${R(t*40)} 48 ${y})"`):circ(48,y,8*k,C.sage,`stroke="#fff" stroke-width="2.5"`);
+    s+=T(68,y-2,d,{a:'start',size:15,c:gap?C.terra:C.ink,op:cl(k)})+T(68,y+17,w,{a:'start',size:13,w:400,c:gap?C.terra:C.muted,op:cl(k)});
+  });
+  s+=t<5.8?cap('傷後 4 個月的路',sg(t,.2,.7)):cap(['中間，少了復健這一段','居家復能成了唯一進到家裡的復健'],1);
+  return s;}},
+
+clock:{L:9,draw(t){
+  let s=bgx(1)+head('爸爸的一天',t);
+  const cx=135,cy=214,h=(6+t/9*24)%24,k=sg(t,0,.8);
+  s+=circ(cx,cy,80,'none',`stroke="${C.cream}" stroke-width="22"`)+circ(cx,cy,56,C.white);
+  const seg=(r,a,b,c,w,op=1)=>`<path d="${arc(cx,cy,r,a,b)}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" opacity="${op*k}"/>`;
+  s+=seg(80,8,16,C.sage,20)+seg(80,16,18.8,C.honey,20)+seg(101,18,23.8,C.teal,8);
+  s+=seg(64,22,26,C.rose,7,.55+.45*Math.sin(t*5));
+  [[0,'0'],[6,'6'],[12,'12'],[18,'18']].forEach(([hh,l])=>{const a=hh/24*2*Math.PI-Math.PI/2;s+=T(cx+118*Math.cos(a)*(hh%12?1:.96),cy+118*Math.sin(a)*(hh%12?1:.96)+5,l,{size:12,c:C.muted,w:400});});
+  const a=h/24*2*Math.PI-Math.PI/2;
+  s+=ln({x:cx,y:cy},{x:cx+46*Math.cos(a),y:cy+46*Math.sin(a)},4,C.ink)+circ(cx,cy,5,C.terra);
+  s+=T(cx,cy+30,String(Math.floor(h)).padStart(2,'0')+':00',{size:15,c:C.muted});
+  const lg=[[C.sage,'上學'],[C.honey,'阿嬤照看'],[C.teal,'爸爸外送'],[C.rose,'夜裡哭鬧']];
+  lg.forEach(([c,l],i)=>{const x=62+(i%2)*92,y=338+Math.floor(i/2)*20;s+=circ(x,y,5,c)+T(x+10,y+4.5,l,{a:'start',size:12.5,w:400,c:C.muted});});
+  let c1;
+  if(h>=8&&h<16)c1=['上學（特教班）','']; else if(h>=16&&h<18.8)c1=['阿嬤接放學、照看','等爸爸下班']; else if(h>=18.8&&h<22)c1=['爸爸晚上出門外送','為了照顧，減少了工時']; else if(h>=22||h<2)c1=['每週 1–2 天','哭鬧到凌晨 1–2 點']; else c1=['爸爸也要睡、也要上班',''];
+  s+=cap(c1[1]?c1:c1[0]);
+  return s;}},
+
+voice:{L:6,draw(t){
+  let s=bgx(0)+head('他怎麼告訴我們',t);
+  const cx=135,cy=228,r=56,ph=t<2.2?0:t<4.2?1:2;
+  s+=circ(cx-8,cy-8,r,C.hair)+circ(cx+3,cy+2,r*.93,C.skin)+circ(cx-14,cy-30,r*.6,C.hair);
+  s+=circ(cx-14,cy+2,4,C.ink)+circ(cx+26,cy+2,4,C.ink)+circ(cx-24,cy+22,7,C.rose,'opacity=".7"')+circ(cx+36,cy+22,7,C.rose,'opacity=".7"');
+  if(ph===1){const m=4+5*Math.abs(Math.sin(t*9));s+=`<ellipse cx="${cx+6}" cy="${cy+30}" rx="9" ry="${R(m)}" fill="${C.ink}"/>`;
+    for(let i=0;i<3;i++){const q=((t-2.2)*1.3+i/3)%1;s+=`<path d="${arc(cx+30,cy+30,22+q*40,2.2,3.8)}" fill="none" stroke="${C.honey}" stroke-width="4" stroke-linecap="round" opacity="${R(1-q)}"/>`;}
+    s+=T(212,148,'啊──',{size:24,c:C.terra,op:sg(t,2.3,2.6)});}
+  else s+=`<path d="M${cx-4} ${cy+30} q 10 4 20 0" stroke="${C.ink}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(ph===0){const k=pop(t,.3);s+=grp(rect(18,96,120,40,16,C.white,`stroke="${C.cream}" stroke-width="2"`)+T(78,122,'要喝水嗎？',{size:15}),{s:k,ox:78,oy:116});
+    s+=grp(rect(176,138,60,32,14,C.cream)+T(206,160,'…',{size:18}),{s:pop(t,1.1),ox:206,oy:154});}
+  if(ph===2)['表情','喊叫','閃躲'].forEach((l,i)=>s+=pill(70+i*65,340,l,[C.sage,C.terra,C.teal][i],pop(t,4.3+i*.25)));
+  s+=cap([['沒有口語','問了，也很難回答'],['不舒服時','只能用喊叫表達'],['看表情、聽聲音、看動作','來調整治療的強度']][ph]);
+  return s;}},
+
+adl:{L:7,draw(t){
+  let s=bgx(1)+head('巴氏量表',t);
+  const it=[['吃飯',0,10],['洗澡',0,5],['修飾',0,5],['穿衣',5,10],['大便',0,10],['小便',0,10],['如廁',0,10],['移位',15,15],['走路',15,15],['樓梯',0,10]];
+  let tot=0;
+  it.forEach(([l,v,m],i)=>{const y=98+i*28,k=ez(sg(t,.3+i*.18,1.1+i*.18));
+    s+=T(48,y+5,l,{a:'end',size:14,w:400})+rect(58,y-7,160,14,7,C.cream);
+    if(v)s+=rect(58,y-7,160*v/m*k,14,7,v===m?C.sage:C.honey);
+    else s+=T(64,y+4,'需協助',{a:'start',size:10,w:400,c:C.muted,op:k});
+    s+=T(224,y+5,v+'/'+m,{a:'start',size:11.5,w:400,c:C.muted});tot+=v*k;});
+  s+=cap(['總分 '+Math.round(tot)+' / 100','會走了，雙手還幫不上忙']);
+  return s;}},
+
+risk:{L:8,draw(t){
+  let s=bgx(0)+head('四個風險訊號',t);
+  const it=[['肘・腕','關節受限、手沒力',C.terra],['14.5','BMI 偏低，常吃不完',C.honey],['嗆咳？','紀錄前後不一致',C.rose],['不穩','移位走路怕跌倒',C.teal]];
+  it.forEach(([a,b,c],i)=>{const k=bk(sg(t,.3+i*1,.9+i*1)),y=92+i*74;
+    s+=grp(rect(20,y,230,62,18,C.white,`stroke="${C.cream}" stroke-width="2"`)+rect(20,y,10,62,5,c)+T(78,y+40,a,{size:23,c})+T(190,y+37,b,{size:13.5,w:400}),{x:(1-k)*260,op:cl(k*2)});});
+  s+=t<5?cap('身體功能與健康'):cap(['要一起看','不只是動作的問題']);
+  return s;}},
+
+stairs:{L:8,draw(t){
+  let s=bgx(1)+head('回家的 3 層樓',t);
+  const x0=20,y0=388,dx=23,dy=25,n=10;
+  const sy=x=>{const i=Math.floor((x-x0)/dx);return i<0?y0:y0-(Math.min(i,n-1)+1)*dy};
+  let d=`M${x0} ${y0+20} L${x0} ${y0}`;for(let i=0;i<n;i++)d+=` L${x0+i*dx} ${y0-(i+1)*dy} L${x0+(i+1)*dx} ${y0-(i+1)*dy}`;d+=` L${x0+n*dx} ${y0+20} Z`;
+  s+=`<path d="${d}" fill="${C.cream}" stroke="#E9D6B8" stroke-width="2" stroke-linejoin="round"/>`;
+  s+=poly([{x:x0+10,y:y0-55},{x:x0+n*dx-5,y:y0-n*dy-50}],3,C.muted,.5);
+  const p=ez(sg(t%8,.2,6.8)),hx=34+p*185,ph=p*2*Math.PI*6,sc=1.3;
+  const fx=a=>hx+7*Math.sin(a),fN={x:fx(ph),y:sy(fx(ph))-4*Math.max(0,Math.cos(ph))},fF={x:fx(ph+Math.PI),y:sy(fx(ph+Math.PI))-4*Math.max(0,Math.cos(ph+Math.PI))};
+  const hip={x:hx,y:Math.min(fN.y,fF.y)-37*sc*.92};
+  const kh={x:hx+18,y:hip.y-26};
+  const dad=fig({hip,ta:10,s:sc,shirt:C.dadShirt,pants:C.dadPants,fN,fF,hN:{x:kh.x+3,y:kh.y+6},hF:{x:kh.x-4,y:kh.y-18}});
+  const kid=fig({hip:kh,ta:-14,s:.78,fN:{x:kh.x+14,y:kh.y+20},fF:{x:kh.x+10,y:kh.y+22},hN:{x:kh.x+2,y:kh.y-6}});
+  s+=dad.g+kid.all+dad.arm;
+  const fl=1+Math.min(2,Math.floor(p*3));
+  s+=circ(222,112,24,C.honey)+T(222,120,fl+'F',{size:20,c:'#fff'});
+  s+=cap(['每次出門，爸爸抱上抱下','上學、回診，天天都要']);
+  return s;}},
+
+budget:{L:8,draw(t){
+  let s=bgx(0)+head('一個月的額度',t);
+  const bx=92,bw=74,base=378,k=230/28070,lim=base-28070*k;
+  const hB=24610*k*ez(sg(t,.4,2.4)),hC=4500*k*ez(sg(t,3,4));
+  s+=rect(bx,base-232,bw,232,12,C.cream,'opacity=".6"');
+  s+=rect(bx,base-hB,bw,hB,10,C.teal);
+  if(hC>0){const top=base-hB-hC;s+=rect(bx,top,bw,hC,8,C.honey);if(top<lim)s+=rect(bx,top,bw,lim-top,6,C.terra);}
+  s+=ln({x:bx-26,y:lim},{x:bx+bw+26,y:lim},2.5,C.terra,'stroke-dasharray="6 4"');
+  s+=T(bx-26,lim-13,'給付額度 28,070',{a:'start',size:12.5,c:C.terra});
+  s+=T(bx+bw+10,base-hB/2,'照顧服務',{a:'start',size:13,op:sg(t,1,1.6)})+T(bx+bw+10,base-hB/2+17,'24,610',{a:'start',size:12,w:400,c:C.muted,op:sg(t,1,1.6)});
+  s+=T(bx+bw+10,base-hB+4,'復能 4,500',{a:'start',size:13,c:'#B9822A',op:sg(t,3.4,3.9)});
+  s+=grp(rect(60,80,150,34,17,C.terra)+T(135,102,'超出 1,040 元／月',{size:14.5,c:'#fff'}),{s:pop(t,4.4),ox:135,oy:97});
+  s+=t<5?cap(['照顧服務先用掉大部分','超出的部分由家庭自費']):cap(['所以，復能只夠','一個月 2 次']);
+  return s;}},
+
+spoon:{L:6,draw(t){
+  let s=bgx(1)+head('目標：自己送進嘴裡',t);
+  s+=rect(66,326,44,8,4,'#C9A27A')+rect(68,334,6,40,3,'#C9A27A')+rect(102,334,6,40,3,'#C9A27A')+rect(66,282,7,52,3,'#C9A27A');
+  s+=rect(140,298,116,8,4,'#C9A27A')+rect(236,306,7,68,3,'#C9A27A')+ground(374,t);
+  const hip={x:92,y:322};
+  const k0=fig({hip,ta:4,fN:{x:128,y:372},fF:{x:122,y:372}});
+  const mouth={x:k0.hc.x+k0.L.hr*.95,y:k0.hc.y+k0.L.hr*.45},bowl={x:186,y:288};
+  const up=ez(sg(t,1,2.4))*(1-ez(sg(t,3.2,4.4)));
+  const hand=lp({x:bowl.x+3*Math.sin(t*8)*(t<1?1:0),y:bowl.y},{x:mouth.x+6,y:mouth.y+4},up);
+  const kid=fig({hip,ta:4,fN:{x:128,y:372},fF:{x:122,y:372},hN:hand,mouth:up>.9?2.6:0});
+  s+=`<path d="M166 288 q 20 18 40 0 z" fill="${C.terra}"/>`+`<ellipse cx="186" cy="288" rx="20" ry="4" fill="#B85E3E"/>`;
+  s+=kid.g;
+  const tip={x:hand.x+lerp(13,-2,up),y:hand.y+lerp(-1,-4,up)};
+  s+=ln(hand,tip,3,C.muted)+`<ellipse cx="${R(tip.x)}" cy="${R(tip.y)}" rx="4.5" ry="2.6" fill="${C.muted}"/>`;
+  s+=kid.arm+circ(hand.x-2,hand.y+3,9,C.teal,'opacity=".35"');
+  s+=T(hand.x-6,hand.y+26,'家屬扶一把',{size:11,c:C.teal,op:1-up});
+  const pct=20+10*ez(sg(t,1,4.4));
+  s+=circ(214,140,30,'none',`stroke="${C.cream}" stroke-width="7"`)+`<circle cx="214" cy="140" r="30" fill="none" stroke="${C.honey}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${R(188.5*pct/100)} 188.5" transform="rotate(-90 214 140)"/>`;
+  s+=T(214,146,Math.round(pct)+'%',{size:17})+T(214,188,'自己完成的比例',{size:11,w:400,c:C.muted});
+  s+=cap(['在部分協助下，舀起、送入口','從 20% 進步到 20–30%']);
+  return s;}},
+
+walkbelt:{L:7,draw(t){
+  let s=bgx(0)+head('安全地帶著走',t)+ground(372,t,38);
+  const ph=t*5.2,bu=Math.sin(Math.PI*sg(t,3.2,4.4));
+  const w=walk(158,372,ph,1,8*(1-bu*.7));w.hip.y+=9*bu;w.hip.x-=2*bu;
+  const kid=fig({hip:w.hip,fN:w.fN,fF:w.fF,ta:bu*12,hN:{x:w.hip.x+4-6*Math.sin(ph),y:w.hip.y+2},hF:{x:w.hip.x-2+6*Math.sin(ph),y:w.hip.y+1},eyes:bu>.5?'closed':0});
+  const dw=walk(112,372,ph+.6,1.3,9);
+  const grip={x:w.hip.x-15,y:w.hip.y-22+4*bu};
+  const dad=fig({hip:dw.hip,fN:dw.fN,fF:dw.fF,ta:12,s:1.3,shirt:C.dadShirt,pants:C.dadPants,hN:grip,hF:{x:dw.hip.x+14,y:dw.hip.y-6}});
+  s+=dad.g+kid.all;
+  s+=ln({x:w.hip.x-10,y:w.hip.y-4},{x:w.hip.x+10,y:w.hip.y-4},6,C.terra);
+  s+=ln({x:w.hip.x-9,y:w.hip.y-4},grip,2.6,C.terra)+dad.arm;
+  if(bu>.05)s+=grp(rect(168,170,72,32,16,C.terra)+T(204,192,'軟腳！',{size:15,c:'#fff'}),{s:bk(bu*1.2),ox:204,oy:186});
+  s+=t<3.1?cap(['用腰帶帶著走','或抓好腋下和褲頭']):cap(['偶爾軟腳','腰帶能穩穩接住']);
+  return s;}},
+
+practice:{L:12,draw(t){
+  let s=bgx(1);
+  if(t<6){
+    s+=head('手撐地板',t)+rect(36,372,200,7,4,C.sage,'opacity=".5"')+ground(379,t);
+    const sh=Math.sin(t*14)*.5,hip={x:108,y:353+Math.sin(t*2)*.6};
+    const k=fig({hip,ta:66,fN:{x:86,y:371},fF:{x:84,y:371},hN:{x:138+sh,y:370},hF:{x:133+sh,y:370},ha:-30});
+    s+=k.all;
+    const sec=Math.floor(60*sg(t,.4,5.4));
+    s+=circ(204,150,34,'none',`stroke="${C.cream}" stroke-width="8"`)+`<circle cx="204" cy="150" r="34" fill="none" stroke="${C.terra}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${R(213.6*sec/60)} 213.6" transform="rotate(-90 204 150)"/>`;
+    s+=T(204,156,sec,{size:22})+T(204,203,'秒',{size:13,w:400,c:C.muted});
+    s+=cap(['一次 1 分鐘，做 2–4 次','撐得越久，手越有力']);
+  }else{
+    const tb=t-6;s+=head('站姿撿東西',tb)+ground(372,t);
+    const c=(tb%2.4)/2.4,a=c<.4?ez(c/.4):c<.8?1-ez((c-.4)/.4):0;
+    const hip=lp({x:124,y:335},{x:108,y:354},a);
+    const obj={x:152,y:366};
+    const pre=fig({hip,ta:lerp(0,58,a),fN:{x:128,y:370},fF:{x:120,y:370}});
+    const hand=lp({x:pre.sho.x+4,y:pre.sho.y+30},obj,a);
+    const k=fig({hip,ta:lerp(0,58,a),fN:{x:128,y:370},fF:{x:120,y:370},hN:hand,ha:lerp(0,-25,a)});
+    s+=rect(186,322,56,46,10,'#C9A27A')+rect(186,322,56,9,5,'#B48A60');
+    for(let i=0;i<Math.min(6,Math.floor(tb/2.4)+3);i++)s+=circ(196+(i%4)*12,318-(i>3?8:0),5.5,[C.honey,C.terra,C.sage,C.teal][i%4]);
+    s+=k.all;
+    if(c<.4)s+=circ(obj.x,obj.y,6,C.terra);else s+=circ(hand.x+2,hand.y+2,6,C.terra);
+    const n=Math.min(15,Math.round(tb/6*15)+1);
+    s+=grp(rect(150,120,96,36,18,C.white,`stroke="${C.cream}" stroke-width="2"`)+T(198,144,'第 '+n+' 顆',{size:16}),{});
+    s+=cap(['平衡＋核心，一天 10–20 次','家屬引導下，完成 15 顆']);
+  }
+  return s;}},
+
+grasp:{L:12,draw(t){
+  let s=bgx(0);
+  if(t<7){
+    s+=head('放在手上，5 秒就放開',t);
+    const open=sg(t,6,6.5),curl=ez(sg(t,1,1.6))*(1-open),tilt=26*ez(open);
+    const piv={x:176,y:262};
+    let hand=rect(-20,244,118,38,18,C.skin)+rect(66,236,116,48,22,C.skin);
+    const a1=-curl*70*D,a2=-curl*150*D,p1={x:piv.x+24*Math.cos(a1),y:piv.y+24*Math.sin(a1)},p2={x:p1.x+22*Math.cos(a2),y:p1.y+22*Math.sin(a2)};
+    hand+=poly([piv,p1,p2],14,'#EDBE98')+poly([{x:96,y:240},{x:108,y:224},{x:122,y:220}],13,'#EDBE98');
+    s+=rect(-20,250,60,30,10,C.dadShirt,'opacity=".0"');
+    const fall=sg(t,6.2,7);
+    const cx=lerp(144,250,fall*fall),cy=t<.8?lerp(120,214,ez(sg(t,0,.8))):lerp(214,470,fall*fall);
+    s+=grp(hand,{rot:tilt,ox:40,oy:262});
+    s+=circ(cx,cy,21,'#C98B4F')+circ(cx-7,cy-5,3,'#7A4B2A')+circ(cx+6,cy+3,3,'#7A4B2A')+circ(cx+2,cy-9,2.5,'#7A4B2A');
+    if(curl>.5)s+=grp(poly([piv,p1,p2],14,'#EDBE98'),{rot:tilt,ox:40,oy:262});
+    const n=Math.min(5,Math.floor(sg(t,1.6,6)*5)+1);
+    if(t>1.6&&t<6.2)s+=circ(210,130,28,C.honey)+T(210,139,n,{size:26,c:'#fff'})+T(210,178,'秒',{size:13,w:400,c:C.muted});
+    s+=t<1.6?cap(['被動把餅乾放在手上','']):t<6.2?cap(['握住……','沒有要吃的意思']):cap(['約 5 秒就放掉','都由爸爸餵食']);
+  }else{
+    const tb=t-7;s+=head('對什麼都提不起興趣',tb);
+    const cx=135,cy=236,r=48;
+    s+=circ(cx-7,cy-7,r,C.hair)+circ(cx+3,cy+2,r*.93,C.skin)+circ(cx-12,cy-26,r*.6,C.hair);
+    s+=circ(cx-12,cy+2,3.6,C.ink)+circ(cx+22,cy+2,3.6,C.ink)+circ(cx-20,cy+20,6,C.rose,'opacity=".7"')+circ(cx+30,cy+20,6,C.rose,'opacity=".7"');
+    s+=`<path d="M${cx-2} ${cy+26} h 14" stroke="${C.ink}" stroke-width="3" stroke-linecap="round"/>`;
+    const items=[
+      (x,y)=>rect(x-18,y-10,36,16,6,C.terra)+rect(x-10,y-20,20,12,5,C.terra)+circ(x-10,y+7,5,C.ink)+circ(x+10,y+7,5,C.ink),
+      (x,y)=>T(x,y+12,'♪',{size:36,c:C.teal}),
+      (x,y)=>{const k=1+.25*Math.sin(tb*9);return grp(`<path d="M0 -16 L4.7 -5 L16 -5 L7 2 L10 14 L0 7 L-10 14 L-7 2 L-16 -5 L-4.7 -5 Z" fill="${C.honey}"/>`,{x,y,s:k});},
+      (x,y)=>`<path d="M${x-18} ${y-4} q 18 20 36 0 z" fill="${C.sage}"/>`+`<path d="M${x-6} ${y-10} q -4 -8 0 -14 M${x+6} ${y-10} q -4 -8 0 -14" stroke="${C.muted}" stroke-width="2" fill="none"/>`];
+    items.forEach((f,i)=>{const a=i*Math.PI/2+tb*.7;s+=f(cx+96*Math.cos(a),cy+88*Math.sin(a));});
+    s+=grp(rect(168,148,50,28,14,C.cream)+T(193,168,'…',{size:16}),{s:pop(tb,.6),ox:193,oy:162});
+    s+=cap(['玩具、聲音、亮光、食物','都很難讓他伸手']);
+  }
+  return s;}},
+
+tiles:{L:9,draw(t){
+  let s=bgx(1)+head('我們卡在哪裡',t);
+  const it=[['被動','缺乏動機'],['額度','一月只 2 次'],['移動','軟腳易跌'],['工作','復健難兼顧'],['頻率','難天天練'],['風險','超出 CA07']];
+  const lg=['認知影響配合度，大多很被動','額度只夠一個月 2 次復能','下肢無力，偶爾軟腳','一直跑醫院會影響爸爸工作','動作不難，難在天天做','嗆咳、營養、浴室、樓梯'];
+  const act=t<1.3?-1:Math.min(5,Math.floor((t-1.3)/1.25));
+  const cols=[C.terra,C.terra,C.terra,C.honey,C.honey,C.honey];
+  it.forEach(([a,b],i)=>{const k=pop(t,.2+i*.15),x=22+(i%2)*120,y=90+Math.floor(i/2)*94,on=i===act;
+    s+=grp(rect(x,y,106,82,18,on?cols[i]:C.white,`stroke="${C.cream}" stroke-width="2"`)+T(x+53,y+38,a,{size:21,c:on?'#fff':cols[i]})+T(x+53,y+62,b,{size:12.5,w:400,c:on?'#fff':C.muted}),{s:k*(on?1.06:1),ox:x+53,oy:y+41});});
+  s+=cap(act<0?'六個困境':['困境 '+(act+1),lg[act]]);
+  return s;}},
+
+freq:{L:8,draw(t){
+  let s=bgx(0)+head('次數，才是關鍵',t);
+  const grid=(y,lab,col,fill)=>{let g=T(38,y-10,lab,{a:'start',size:14});let n=0;
+    for(let d=0;d<28;d++){const x=38+(d%7)*27,yy=y+Math.floor(d/7)*27,on=fill(d)&&t>.4+d*.16;if(on)n++;
+      g+=rect(x,yy,22,22,6,on?col:C.cream,on?'':'opacity=".7"');if(on)g+=`<path d="M${x+6} ${yy+11} l4 4 l7 -8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;}
+    return g+T(232,y-10,n+' 次',{a:'end',size:15,c:col});};
+  s+=grid(110,'醫院復健（每週 1 次）',C.teal,d=>d%7===2);
+  s+=grid(262,'居家：家屬＋居服員',C.terra,d=>true);
+  s+=cap(['動作不難，重點是天天做','醫院教方法，家裡天天練']);
+  return s;}},
+
+embed:{L:12,draw(t){
+  let s=bgx(1)+head('把練習放進照顧裡',t);
+  const sc=Math.min(2,Math.floor(t/4)),tl=t-sc*4,fo=sg(tl,0,.35)*(1-sg(tl,3.65,4));
+  const lab=['換尿布前','移位時','餵食時'][sc],sub=['扶著站 10 秒','重心前後左右','先讓他握住湯匙'][sc];
+  let g=pill(135,100,lab,[C.terra,C.teal,C.sage][sc],1,15)+ground(372,t);
+  if(sc===0){
+    g+=rect(150,296,96,6,3,'#C9A27A')+rect(236,296,6,76,3,'#C9A27A')+rect(152,296,6,76,3,'#C9A27A');
+    const k=fig({hip:{x:128,y:333},fN:{x:132,y:370},fF:{x:124,y:370},hN:{x:158,y:300},hF:{x:152,y:302}});
+    g+=k.all;const n=Math.min(10,Math.floor(sg(tl,.4,3.4)*10)+1);
+    g+=circ(205,170,26,C.honey)+T(205,178,n,{size:22,c:'#fff'});
+  }else if(sc===1){
+    g+=rect(30,330,100,14,7,'#C9A27A')+rect(30,312,100,20,8,C.rose,'opacity=".6"')+rect(34,344,6,28,3,'#C9A27A')+rect(120,344,6,28,3,'#C9A27A');
+    const sw=Math.sin(tl*Math.PI);
+    const k=fig({hip:{x:110,y:326},ta:16*sw,fN:{x:142,y:370},fF:{x:136,y:370},hN:{x:124,y:332},hF:{x:118,y:332}});
+    g+=k.all;
+    const ix=205,iy=180,ph=Math.floor(tl*2)%4,dirs=[[0,-1],[0,1],[-1,0],[1,0]],amt=Math.sin((tl*2%1)*Math.PI);
+    g+=circ(ix,iy,40,C.white,`stroke="${C.cream}" stroke-width="2"`)+`<ellipse cx="${ix-11}" cy="${iy}" rx="8" ry="15" fill="${C.cream}"/><ellipse cx="${ix+11}" cy="${iy}" rx="8" ry="15" fill="${C.cream}"/>`;
+    g+=circ(ix+dirs[ph][0]*18*amt,iy+dirs[ph][1]*18*amt,7,C.terra)+T(ix,iy+58,'重心',{size:12,w:400,c:C.muted});
+  }else{
+    g+=rect(66,326,44,8,4,'#C9A27A')+rect(68,334,6,40,3,'#C9A27A')+rect(102,334,6,40,3,'#C9A27A')+rect(140,298,116,8,4,'#C9A27A')+rect(236,306,7,68,3,'#C9A27A');
+    g+=`<path d="M166 288 q 20 18 40 0 z" fill="${C.terra}"/>`;
+    const lift=6*Math.sin(tl*2);
+    const hand={x:168,y:290-Math.max(0,lift)};
+    const k=fig({hip:{x:92,y:322},ta:4,fN:{x:128,y:372},fF:{x:122,y:372},hN:hand});
+    g+=k.g+ln(hand,{x:hand.x+14,y:hand.y-2},3,C.muted)+k.arm+circ(hand.x-1,hand.y+2,10,C.teal,'opacity=".35"');
+  }
+  s+=grp(g,{op:fo})+cap(['照顧時順便練：'+sub,'交給家屬與居服員'],fo);
+  return s;}},
+
+q:{L:8,draw(t){
+  let s=bgx(0)+head('想請大家一起討論',t);
+  const qs=[['居服員能不能','一起帶練習？'],['額度不夠時','照顧與復能怎麼排？'],['骨折後的復健','怎麼兼顧爸爸工作？'],['對什麼都沒興趣','動機從哪裡找？']];
+  const i=Math.min(3,Math.floor(t/2)),tl=t-i*2,k=bk(sg(tl,0,.45)),fo=1-sg(tl,1.75,2);
+  s+=grp(circ(135,170,40,[C.terra,C.teal,C.sage,C.honey][i])+T(135,180,'Q'+(i+1),{size:28,c:'#fff'})+T(135,262,qs[i][0],{size:20})+T(135,294,qs[i][1],{size:20}),{s:k,ox:135,oy:230,op:fo});
+  for(let j=0;j<4;j++)s+=circ(108+j*18,340,j===i?6:4,j===i?C.terra:C.cream);
+  s+=cap(['挑一到兩題就好','歡迎分享經驗']);
+  return s;}},
+
+next:{L:7,draw(t){
+  let s=bgx(1)+head('下一步',t);
+  const it=[['動作卡','給家屬與居服員',C.terra],['骨科・吞嚥・營養','確認限制，必要時轉介',C.teal],['輔具・浴室・喘息','減輕爸爸的負荷',C.sage]];
+  const ic=[(x,y)=>rect(x-10,y-13,20,26,4,'#fff')+ln({x:x-5,y:y-5},{x:x+5,y:y-5},2,C.terra)+ln({x:x-5,y:y+1},{x:x+5,y:y+1},2,C.terra),
+            (x,y)=>rect(x-3.5,y-11,7,22,2,'#fff')+rect(x-11,y-3.5,22,7,2,'#fff'),
+            (x,y)=>`<path d="M${x-12} ${y+10} V${y-2} L${x} ${y-12} L${x+12} ${y-2} V${y+10} Z" fill="#fff"/>`];
+  it.forEach(([a,b,c],i)=>{const k=bk(sg(t,.4+i*.9,1+i*.9)),y=96+i*92;
+    s+=grp(rect(20,y,230,76,20,C.white,`stroke="${C.cream}" stroke-width="2"`)+circ(58,y+38,22,c)+ic[i](58,y+38)+T(92,y+34,a,{a:'start',size:16})+T(92,y+56,b,{a:'start',size:12.5,w:400,c:C.muted}),{x:(1-k)*-260,op:cl(k*2)});});
+  s+=cap(['請個管協助','一起連結資源']);
+  return s;}},
+
+end:{L:7,draw(t){
+  let s=bgx(0)+circ(135,250,96,C.honey,'opacity=".25"')+ground(372,t,30);
+  const ph=t*4.6;
+  const w=walk(164,372,ph,1,7);
+  const kid=fig({hip:w.hip,fN:w.fN,fF:w.fF,hN:{x:w.hip.x+4-6*Math.sin(ph),y:w.hip.y+2},hF:{x:w.hip.x-2+6*Math.sin(ph),y:w.hip.y+1}});
+  const dw=walk(122,372,ph+.5,1.3,8);
+  const dad=fig({hip:dw.hip,fN:dw.fN,fF:dw.fF,ta:6,s:1.3,shirt:C.dadShirt,pants:C.dadPants,hN:{x:kid.sho.x-4,y:kid.sho.y-2},ha:14});
+  s+=dad.g+kid.all+dad.arm;
+  const hk=pop(t,1),hy=180-sg(t,1,7)*20;
+  s+=grp(`<path d="M0 6 C -14 -6 -8 -18 0 -9 C 8 -18 14 -6 0 6 Z" fill="${C.terra}"/>`,{x:150,y:hy,s:hk*1.3});
+  s+=T(135,58,'謝謝聆聽',{size:24,op:sg(t,0,.6)});
+  s+=cap(['陪他，一步一步','期待大家的回饋'],sg(t,.8,1.4));
+  return s;}}
+};
+
+const v=document.getElementById('v');
+window.CLIPS=Object.fromEntries(Object.entries(CLIPS).map(([k,c])=>[k,c.L]));
+window.draw=(name,t)=>{v.innerHTML=CLIPS[name].draw(t);};
+const q=new URLSearchParams(location.search),only=q.get('c');
+if(!q.has('render')){
+  const names=Object.keys(CLIPS);let cur=only||names[0],t0=performance.now();
+  const sel=document.createElement('select');sel.id='pick';names.forEach(n=>sel.add(new Option(n,n)));sel.value=cur;sel.onchange=()=>{cur=sel.value;t0=performance.now()};document.body.appendChild(sel);
+  (function loop(){const L=CLIPS[cur].L,t=((performance.now()-t0)/1000)%L;draw(cur,t);requestAnimationFrame(loop)})();
+}
+</script>
+</body>
+</html>
